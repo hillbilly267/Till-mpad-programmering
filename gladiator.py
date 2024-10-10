@@ -248,7 +248,7 @@ total_points = 20
 
 
 
-# #weapons
+#weapons
 
 weapons = ["sword", "axe", "dagger", "mace", "shield", "staff", "flail"]
 
@@ -263,7 +263,7 @@ chest_plate = "N/A"
 
 
 
-# # print("Welcome to the game lobby!\n make sure you use numbers when selecting")
+# # print("Welcome to the game lobby!\n make sure you use numbers when selecting if not stated otherwise")
 
 while True:
     print("Choose an option:")
@@ -310,13 +310,106 @@ while True:
           print("4. Exit")
           choice = int(input("enter your choice: "))
           if choice == 1:
+            clear_terminal()
             print("\nyou have enterd the weapon part of the armory.\n")
             print("your balance:", balance,)
-            print("\nlist of weapons:\n",weapons+1)
+            print("\nlist of weapons:\n",weapons)
+            weapon_option=input("if you want more information about a weapon, type its name.\n If you want to buy a weapon, type: buy (weapons mane)\n: ")
+            if weapon_option == "sword":
+                print("\n:An iron sword is the most basic and commoly used weapon.\nIt it well balanced between damage:4 and dexterity:4.\n")
+            elif weapon_option == "axe":
+               print("\n: The axe is like the sword.\nIt is well balanced between damage:4 and dexterity:4.\n")
+            elif weapon_option == "dagger":
+               print("\n: A dagger is a small, light weapon.\nIt it does less damage:1 but also less dexterity:1.\n")
+            elif weapon_option == "mace":
+               print("\n:Mace is a heavy weapon.\nIt it does more damage:6 but also more dexterity:6.\n")
+            elif weapon_option == "shield":
+               print("\n: A shield is a protective tool that can be used alongside other weapons.\nIt does now do damage and will increas dextarity:4 but is another way to get more armor:4.\n")
+            elif weapon_option == "staff":
+               print("\n: A staff is a bit heavier then dagger but lighter then sword.\nIt it does less damage:2 but also less dexterity:2.\n")
+            elif weapon_option == "flail":
+               print("\n: A flail is a heavy weapon.\nIt it does more damage:6 but also more dexterity:6.\n")
+
+            elif weapon_option == "buy sword":
+                yes_No = input("\n: A sword costs 20 gold coins.\n\nDo you want to buy it? (yes/no): ")
+                if yes_No == "yes" and balance >= 20:
+                    balance -= 20
+                    print("\n: You have bought a sword.")
+                    weapon = "sword"
+                elif yes_No == "no":
+                    print("\n: Oh well.\n")
+                
+                elif weapon_option == "axe":
+                    yes_No = input("\n: An axe costs 15 gold coins.\n\nDo you want to buy it? (yes/no): ")
+                    if yes_No == "yes" and balance >= 20:
+                        balance -= 15
+                        print("\n: You have bought an axe.")
+                        weapon = "axe"
+                    elif yes_No == "no":
+                        print("\n: Oh well.\n")
+                    else:
+                        print("\n: Invalid option.")
+                
+                elif weapon_option == "dagger":
+                    yes_No = input("\n: A dagger costs 5 gold coins.\n\nDo you want to buy it? (yes/no): ")
+                    if yes_No == "yes" and balance >= 5:
+                        balance -= 5
+                        print("\n: You have bought a dagger.")
+                        weapon = "dagger"
+                    elif yes_No == "no":
+                        print("\n: Oh well.\n")
+                    else:
+                        print("\n: Invalid option.")
+                
+                elif weapon_option == "mace":
+                    yes_No = input("\n: A mace costs 30 gold coins.\n\nDo you want to buy it? (yes/no): ")
+                    if yes_No == "yes" and balance >= 30:
+                        balance -= 30
+                        print("\n: You have bought a mace.")
+                        weapon = "mace"
+                    elif yes_No == "no":
+                        print("\n: Oh well.\n")
+                    else:
+                        print("\n: Invalid option.")
+                
+                elif weapon_option == "shield":
+                    yes_No = input("\n: A shield costs 10 gold coins.\n\nDo you want to buy it? (yes/no): ")
+                    if yes_No == "yes" and balance >= 10:
+                        balance -= 10
+                        print("\n: You have bought a shield.")
+                        weapon = "shield"
+                    elif yes_No == "no":
+                        print("\n: Oh well.\n")
+                    else:
+                        print("\n: Invalid option.")
+                
+                elif weapon_option == "staff":
+                    yes_No = input("\n: A staff costs 12 gold coins.\n\nDo you want to buy it? (yes/no): ")
+                    if yes_No == "yes" and balance >= 10:
+                        balance -= 12
+                        print("\n: You have bought a staff.")
+                        weapon = "staff"
+                    elif yes_No == "no":
+                        print("\n: Oh well.\n")
+                    else:
+                        print("\n: Invalid option.")
+                
+                elif weapon_option == "flail":
+                    yes_No = input("\n: A flail costs 35 gold coins.\n\nDo you want to buy it? (yes/no): ")
+                    if yes_No == "yes" and balance >= 30:
+                        balance -= 35
+                        print("\n: You have bought a flail.")
+                        weapon = "flail"
+                    elif yes_No == "no":
+                        print("\n: Oh well.\n")
+                    else:
+                        print("\n: Invalid option.")
 
           elif choice == 2:
+            clear_terminal()
             print("hello")
           elif choice == 3:
+            clear_terminal()
             print("hello")
           elif choice == 4:
             clear_terminal
