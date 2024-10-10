@@ -324,7 +324,7 @@ while True:
             elif weapon_option == "mace":
                print("\n:Mace is a heavy weapon.\nIt it does more damage:6 but also more dexterity:6.\n")
             elif weapon_option == "shield":
-               print("\n: A shield is a protective tool that can be used alongside other weapons.\nIt does now do damage and will increas dextarity:4 but is another way to get more armor:4.\n")
+               print("\n: A shield is a protective tool that can be used alongside other weapons.\nIt does no damage but and will increas dextarity:4 but is another way to get more armor:4.\n")
             elif weapon_option == "staff":
                print("\n: A staff is a bit heavier then dagger but lighter then sword.\nIt it does less damage:2 but also less dexterity:2.\n")
             elif weapon_option == "flail":
