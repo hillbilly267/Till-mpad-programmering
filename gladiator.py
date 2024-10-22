@@ -8,19 +8,6 @@ def clear_terminal():
 
 dice=[1,2,3,4,5,6,7,8,9,10]
 
-def generate_name():
-    first_names_pick = ["John", "James", "Robert", "Michael", "David", "Richard", "Christopher", "Daniel", "Matthew", "Joseph"]
-    last_names_pick = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Martinez", "Rodriguez", "Taylor", "Hernandez"]
-    middle_names_pick = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-
-    first_name = random.choice(first_names_pick)
-    middle_name = random.choice(middle_names_pick)
-    last_name = random.choice(last_names_pick)
-
-    return first_name, middle_name, last_name
-
-
-
 diff = "N/A"
 lev_violence = 0
 gender= "N/A"
@@ -117,11 +104,11 @@ total_points = 20
 #     else:
 #         print("invalid gender, try again")
 # time.sleep(1)
-name=input("please enter your name: ")
-time.sleep(1)
-print("Your name is:", name)
-time.sleep(1)
-clear_terminal()
+# name=input("please enter your name: ")
+# time.sleep(1)
+# print("Your name is:", name)
+# time.sleep(1)
+# clear_terminal()
 
 
 
@@ -261,68 +248,60 @@ clear_terminal()
 
 
 
-#weapons
+# #weapons
 
 weapons = ["sword", "axe", "dagger", "mace", "shield", "staff", "flail"]
-sword=[4,4]
-
-axe=[4,4]
-
-dagger=[1,1]
-
-mace=[6,6]
-
-shield=[6,4]
-
-staff=[2,2]
-
-flail=[6,6]
-
-# armor
-helmet_armor = ["leather helmet", "chainmail helmet", "iron helmet", "tank helmet"]
-chest_plate_armor = ["leather chestplate", "chainmail chestplate", "iron chestplate", "tank chestplate"] 
 
 
-# NPC info
-npc_vigor = 10
-npc_strength = 8
-npc_dexterity = 6
-npc_reaction = 1
-npc_balance = 0
-npc_shield = "N/A"
-npc_weapon = "N/A"
-npc_helmet = "N/A"
-npc_chest_plate = "N/A"
+#NPC
+npc_total_points = 20
+npc_vigor = random.randint(1, npc_total_points)
+npc_dexterity = random.randint(1, npc_total_points - npc_vigor)
+npc_reaction = random.randint(1, npc_total_points - npc_vigor - npc_dexterity)
+npc_total_points -= npc_vigor + npc_dexterity + npc_reaction
+npc_strength = npc_total_points
+
+npc_weapon = random.choice(weapons)
+npc_helmet = random.choice(["leather helmet", "chain mail", "plate mail"])
+npc_chest_plate = random.choice(["leather armor", "chain mail", "plate mail"])
+
+print("NPC Stats:")
+print("Vigor:", npc_vigor)
+print("Strength:", npc_strength)
+print("Dexterity:", npc_dexterity)
+print("Reaction:", npc_reaction)
+print("Weapon:", npc_weapon)
+print("Helmet:", npc_helmet)
+print("Chest Plate:", npc_chest_plate)
+
 
 
 
 # player_info
-balance = 500
-weapon = "N/A"
-shield = "N/A"
-helmet = "N/A"
+balance = 50,
+weapon = "N/A",
+helmet = "N/A",
 chest_plate = "N/A"
+level = 1
+npc_total_points + level * 2
 
 
 
-print("Welcome to the game lobby!\n make sure you use numbers when selecting if not stated otherwise")
+# # print("Welcome to the game lobby!\n make sure you use numbers when selecting")
 
 while True:
-    print("\nChoose an option:")
+    print("Choose an option:")
     print("1. Armory")
     print("2. Battle Arena")
     print("3. Exit")
 
     choice = int(input("Enter your choice: "))
 
-
-
-
     if choice == 1:
         clear_terminal()
-        print("You have entered the Armory. Here you can buy and sell armor and weapons.")
+        print("\nYou have entered the Armory. Here you can buy and sell armor and weapons.")
         while True:
-          print("\nchoose an option:")
+          print("choose an option:")
           print("1. buy weapons")
           print("2. buy armor")
           print("3. sell equipment")
@@ -330,7 +309,7 @@ while True:
           choice = int(input("enter your choice: "))
           if choice == 1:
             clear_terminal()
-            print("\nyou have enterd the weapon section.\n")
+            print("\nyou have enterd the weapon part of the armory.\n")
             print("your balance:", balance,)
             print("\nlist of weapons:\n",weapons)
             weapon_option=input("if you want more information about a weapon, type its name.\n If you want to buy a weapon, type: buy (weapons mane)\n: ")
@@ -343,12 +322,12 @@ while True:
             elif weapon_option == "mace":
                print("\n:Mace is a heavy weapon.\nIt it does more damage:6 but also more dexterity:6.\n")
             elif weapon_option == "shield":
-               print("\n: A shield is a protective tool that can be used alongside other weapons.\nIt does no damage but and will increas dextarity:4 but is another way to get more armor:6.\n")
+               print("\n: A shield is a protective tool that can be used alongside other weapons.\nIt does now do damage and will increas dextarity:4 but is another way to get more armor:4.\n")
             elif weapon_option == "staff":
                print("\n: A staff is a bit heavier then dagger but lighter then sword.\nIt it does less damage:2 but also less dexterity:2.\n")
             elif weapon_option == "flail":
                print("\n: A flail is a heavy weapon.\nIt it does more damage:6 but also more dexterity:6.\n")
-
+               
             elif weapon_option == "buy sword":
                 yes_No = input("\n: A sword costs 20 gold coins.\n\nDo you want to buy it? (yes/no): ")
                 if yes_No == "yes" and balance >= 20:
@@ -356,209 +335,83 @@ while True:
                     print("\n: You have bought a sword.")
                     weapon = "sword"
                 elif yes_No == "no":
-                    print("\n: Oh well.\n")
+                    print("\n: Oh well.")
                 
-                elif weapon_option == "buy axe":
+                elif weapon_option == "axe":
                     yes_No = input("\n: An axe costs 15 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 20:
-                        balance -= 20
+                    if yes_No == "yes" and balance >= 15:
+                        balance -= 15
                         print("\n: You have bought an axe.")
                         weapon = "axe"
                     elif yes_No == "no":
-                        print("\n: Oh well.\n")
+                        print("\n: Oh well.")
                     else:
                         print("\n: Invalid option.")
                 
-                elif weapon_option == "buy dagger":
+                elif weapon_option == "dagger":
                     yes_No = input("\n: A dagger costs 5 gold coins.\n\nDo you want to buy it? (yes/no): ")
                     if yes_No == "yes" and balance >= 5:
                         balance -= 5
                         print("\n: You have bought a dagger.")
                         weapon = "dagger"
                     elif yes_No == "no":
-                        print("\n: Oh well.\n")
+                        print("\n: Oh well.")
                     else:
                         print("\n: Invalid option.")
                 
-                elif weapon_option == "buy mace":
+                elif weapon_option == "mace":
                     yes_No = input("\n: A mace costs 30 gold coins.\n\nDo you want to buy it? (yes/no): ")
                     if yes_No == "yes" and balance >= 30:
                         balance -= 30
                         print("\n: You have bought a mace.")
                         weapon = "mace"
                     elif yes_No == "no":
-                        print("\n: Oh well.\n")
+                        print("\n: Oh well.")
                     else:
                         print("\n: Invalid option.")
                 
-                elif weapon_option == "buy shield":
+                elif weapon_option == "shield":
                     yes_No = input("\n: A shield costs 10 gold coins.\n\nDo you want to buy it? (yes/no): ")
                     if yes_No == "yes" and balance >= 10:
                         balance -= 10
                         print("\n: You have bought a shield.")
-                        shield = "shield"
+                        weapon = "shield"
                     elif yes_No == "no":
-                        print("\n: Oh well.\n")
+                        print("\n: Oh well.")
                     else:
                         print("\n: Invalid option.")
                 
-                elif weapon_option == "buy staff":
+                elif weapon_option == "staff":
                     yes_No = input("\n: A staff costs 12 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 10:
+                    if yes_No == "yes" and balance >= 12:
                         balance -= 12
                         print("\n: You have bought a staff.")
                         weapon = "staff"
                     elif yes_No == "no":
-                        print("\n: Oh well.\n")
+                        print("\n: Oh well.")
                     else:
                         print("\n: Invalid option.")
                 
-                elif weapon_option == "buy flail":
+                elif weapon_option == "flail":
                     yes_No = input("\n: A flail costs 35 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 30:
+                    if yes_No == "yes" and balance >= 35:
                         balance -= 35
                         print("\n: You have bought a flail.")
                         weapon = "flail"
                     elif yes_No == "no":
-                        print("\n: Oh well.\n")
+                        print("\n: Oh well.")
                     else:
                         print("\n: Invalid option.")
 
           elif choice == 2:
             clear_terminal()
-            print("you have entered the armor section")
-            print("your balance:", balance,)
-            print("\nlist of armors:\nhelmets: ",helmet_armor,"\nchest plates: ", chest_plate_armor,"\n")
-            armor_option=input("if you want more information about a armour, type its name, note armor value is prosental so armor:4 means you will take 4% less damage\n If you want to buy armour, type: buy (armours mane)\n: ")
-            if armor_option == "leather helmet":
-                print("\n:the leather helmet is the the most basic of armour. Its is the weakest so armor:2\n")
-            elif armor_option == "chainmail helmet":
-               print("\n: The Chainmail Helmet is a step up from leather helmet, offering better armor:4.\n")
-            elif armor_option == "iron helmet":
-               print("\n: The Iron Helmet is solid and dependable, offering significantly more armor:6.\n")
-            elif armor_option == "tank helmet":
-               print("\n: The Tank Helmet is the most formidable headgear, designed for players who prioritize defense above all. Its thick metal plating provides unmatched armor:8\n Note becouse its so heavy it will increas dextarity usage by 10.\n")
-            elif armor_option == "leather chestplate":
-               print("\n: The leather chesthelmet much like the leather helmet is the weakest of the armor giving minimal armor:4 \n")
-            elif armor_option == "chainmail chestplate":
-               print("\n: A step obove the leather chestplate but is the most used one with an armor:8.\n")
-            elif armor_option == "iron cheastplate":
-               print("\n: The Iron Chestplate is a robust piece of armor:12 .\n")
-            elif armor_option == "tank cheastplate":
-               print("\n: The Tank Chestplate is a real heavy and dependable piece of thick steel that almost nothing can penetrate, armor:12. note: its heavy and will incres the usage of dextarity:20 \n")
-
-            elif armor_option == "buy leather helmet":
-                yes_No = input("\n: leather helmet costs 10 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                if yes_No == "yes" and balance >= 10:
-                    balance -= 10
-                    print("\n: You have bought a leather helmet.")
-                    helmet = "leather helmet"
-                elif yes_No == "no":
-                    print("\n: Oh well.\n")
-                
-                elif armor_option == "chainmail helmet":
-                    yes_No = input("\n: chainmail helmet costs 25 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 25:
-                        balance -= 25
-                        print("\n: You have bought chainmail helmet.")
-                        armor = "chainmail helmet"
-                    elif yes_No == "no":
-                        print("\n: Oh well.\n")
-                    else:
-                        print("\n: Invalid option.")
-                
-                elif armor_option == "iron helmet":
-                    yes_No = input("\n: iron helmet costs 50 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 50:
-                        balance -= 50
-                        print("\n: You have bought an iron helmet.")
-                        armor = "iron helmet"
-                    elif yes_No == "no":
-                        print("\n: Oh well.\n")
-                    else:
-                        print("\n: Invalid option.")
-                
-                elif armor_option == "tank helmet":
-                    yes_No = input("\n: A tank helmet 150 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 150:
-                        balance -= 150
-                        print("\n: You have bought a tank helmet.")
-                        armor = "tank helmet"
-                    elif yes_No == "no":
-                        print("\n: Oh well.\n")
-                    else:
-                        print("\n: Invalid option.")
-                
-                elif armor_option == "leather chestplate":
-                    yes_No = input("\n: leather chestplate costs 20 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 20:
-                        balance -= 20
-                        print("\n: You have bought a leather chestplate.")
-                        armor = "leather chestplate"
-                    elif yes_No == "no":
-                        print("\n: Oh well.\n")
-                    else:
-                        print("\n: Invalid option.")
-                
-                elif armor_option == "chainmail chestplate":
-                    yes_No = input("\n: A chainmail chestplate costs 40 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 40:
-                        balance -= 40
-                        print("\n: You have bought chainmail chestplate.")
-                        armor = "chainmail chastplate"
-                    elif yes_No == "no":
-                        print("\n: Oh well.\n")
-                    else:
-                        print("\n: Invalid option.")
-                
-                elif armor_option == "iron chestplate":
-                    yes_No = input("\n: iron chastplate costs 100 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 100:
-                        balance -= 100
-                        print("\n: You have bought an iron chestplate.")
-                        armor = "iron chestplate"
-                    elif yes_No == "no":
-                        print("\n: Oh well.\n")
-                    else:
-                        print("\n: Invalid option.")
-
-                elif armor_option == "tank chestplate":
-                    yes_No = input("\n: The tank chastplate costs 300 gold coins.\n\nDo you want to buy it? (yes/no): ")
-                    if yes_No == "yes" and balance >= 300:
-                        balance -= 300
-                        print("\n: You have bought a tank chestplate.")
-                        armor = "tank chestplate"
-                    elif yes_No == "no":
-                        print("\n: Oh well.\n")
-                    else:
-                        print("\n: Invalid option.")
-
+            print("hello")
           elif choice == 3:
             clear_terminal()
-            print("you have selling area")
-            print("Your balance:", balance,)
-            print("\nList of your equipment:")
-            print("Weapon:", weapon)
-            print("Helmet:", helmet)
-            print("Chest Plate:", chest_plate)
-            sell_option = input("Enter the name of the item you want to sell: ")
-            if sell_option == "sword" or "axe" or "flail":
-                print("\n: Are you sure you want to sell your", sell_option, "for 10 gold coins?")
-                yes_No = input("\n(yes/no): ")
-                if yes_No == "yes":
-                    balance += 10
-                    clear_terminal
-                    print("\n: You have sold your sword.")
-                    weapon = "N/A"
-                elif yes_No == "no":
-                    clear_terminal
-                    print("\n: Oh well.\n")
-                else:
-                    print("\n: Invalid option.")
-
+            print("hello")
           elif choice == 4:
             clear_terminal
-            print("Returning to the lobby.\n")
+            print("Returning to the lobby.")
             time.sleep(1)
             break
           else:
@@ -569,54 +422,47 @@ while True:
 
     elif choice == 2:
         clear_terminal
-        print("You have entered the Battle Arena.")
+        print("You stand outside the Battle Arena.")
+        
         print("Are you sure you want to battle? (yes/info/no)")
         confirmation = input("Enter your choice: ")
 
         if confirmation == "yes":
-            while vigor > 0 or npc_vigor > 0:
-                clear_terminal()
-                print("You have entered the Battle Arena and there no backing out now.\nYou´l be facing", generate_name())
-                confirmation = input("\nAre the gladiators ready to fight (yes): ")
-                if confirmation == "yes":
-                    clear_terminal()
-                    print(name,":",  vigor, "health.                    enemy",npc_vigor,"health")
-                    print("\n\n\nYour move:")
-                    move = input("Choose your move (quick attack, normal attack, heavy attack)\n:")
-                    
-                    if move == "quick attack":
-                        damage = random.randint(strength)
-                        npc_vigor -= damage
-                        print("\n: You attacked the npc for", damage, "damage!")
-                    elif move == "defend":
-                        print("\n: You defended your move.")
-                    else:
-                        print("\n: Invalid option.")
-
-                    if npc_vigor <= 0:
-                        print("\n: You won!")
-                        print("Your new balance:", balance + 100)
-                        balance += 100
-                        break
-                    elif vigor <= 0:
-                        print("\n: You died!")
-                        break
-                else:
-                    print("invalid option.")
+            clear_terminal()
+            print("you have entered the Battle Arena")
+            time.sleep(2)
+            clear_terminal()
+            print(" ladies and gentlemen, the two gladiators have entered the Battle Arena and are as ready to fight as you are exited")
+            time.sleep(2)
+            conformation = input("Are the two gladiators ready to fight? (yes/no)")
+            if confirmation == "yes":
+                print("Round 1:")
+                time.sleep(1)
+                print("GOOOOOOOO")
+            else:
+                print("well to baad")
+                time.sleep(1)
+                print("GOOOOOOOO")
+            
+            # while vigor or 
 
 
 
-        elif confirmation == "info":
-            print("\n: The Battle Arena is where you fight and test your skills. Here you will earn money and fight against other gladiators. Note the the further in you go the harder it will get.")
+            
+            
             
         elif confirmation == "no":
             print("Returning to the lobby.")
+
+        elif confirmation == "info":
+            print("The battle arena is were you can test your streangh and fight against enemys. Each round will give money depending on the performance.\nAfter each round youl gain a point and will be sent back to the lobby")
+
         else:
             print("Invalid option. Please try again.")
 
 
     elif choice == 3:
-        print("Exiting the game. Goodbye!")
+        print("Exiting the game lobby. Goodbye!")
         break
 
     else:
