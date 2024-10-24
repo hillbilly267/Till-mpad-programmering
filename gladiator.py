@@ -265,6 +265,11 @@ npc_weapon = random.choice(weapons)
 npc_helmet = random.choice(["leather helmet", "chain mail", "plate mail"])
 npc_chest_plate = random.choice(["leather armor", "chain mail", "plate mail"])
 
+npc_vigor = 20
+npc_strength = 2
+npc_dexterity = 20
+npc_reaction = 1
+
 print("NPC Stats:")
 print("Vigor:", npc_vigor)
 print("Strength:", npc_strength)
@@ -402,13 +407,6 @@ while True:
                         print("\n: Oh well.")
                     else:
                         print("\n: Invalid option.")
-
-          elif choice == 2:
-            clear_terminal()
-            print("hello")
-          elif choice == 3:
-            clear_terminal()
-            print("hello")
           elif choice == 4:
             clear_terminal
             print("Returning to the lobby.")
@@ -434,17 +432,24 @@ while True:
             clear_terminal()
             print(" ladies and gentlemen, the two gladiators have entered the Battle Arena and are as ready to fight as you are exited")
             time.sleep(2)
-            conformation = input("Are the two gladiators ready to fight? (yes/no)")
+            print("Are the two gladiators ready to fight? (yes/no)")
+            conformation = input(": ")
             if confirmation == "yes":
                 print("Round 1:")
                 time.sleep(1)
                 print("GOOOOOOOO")
+                clear_terminal()
             else:
                 print("well to baad")
                 time.sleep(1)
                 print("GOOOOOOOO")
+                clear_terminal()
             
-            # while vigor or 
+            while vigor or npc_vigor >= 0:
+                clear_terminal
+                print("health:", vigor,                                                                                                         "npc health", npc_vigor)
+
+
 
 
 
@@ -455,7 +460,8 @@ while True:
             print("Returning to the lobby.")
 
         elif confirmation == "info":
-            print("The battle arena is were you can test your streangh and fight against enemys. Each round will give money depending on the performance.\nAfter each round youl gain a point and will be sent back to the lobby")
+            clear_terminal()
+            print("The battle arena is were you can test your streangh and fight against enemys. Each round will give money depending on you'r performance.\nAfter each round you'l gain a point and will be sent back to the lobby")
 
         else:
             print("Invalid option. Please try again.")
