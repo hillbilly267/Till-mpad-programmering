@@ -43,7 +43,7 @@ total_points = 20
 # a2 = input("if you want more info on what changes with the difficulty type 1, if not hit enter: ")
 
 # if a2 == "1":
-#     print("\nThe difficulty changes the stats given to the NPC´s, increases the chances of you succeeding and lowers theirs.\nLowers the judgment of the public and king.")
+#     print("\nThe difficulty changes the stats given to the NPC´s, increases the chances of them succeeding and lowers your's.\nIncreases the judgment of the public and king.")
 
 # while True:
 #     a1 = input("\nEnter difficulty: ")
@@ -66,7 +66,7 @@ total_points = 20
 
 
 
-# print("Please select level of voilenc 1 if your under the age of 18 and 2 if your over the age of 18")
+# print("Please select level of violence 1 if your under the age of 18 and 2 if your over the age of 18")
 
 # while True:
 #     a3=int(input())
@@ -253,23 +253,48 @@ total_points = 20
 weapons = ["sword", "axe", "dagger", "mace", "shield", "staff", "flail"]
 
 
-#NPC
-npc_total_points = 20
-npc_vigor = random.randint(1, npc_total_points)
-npc_dexterity = random.randint(1, npc_total_points - npc_vigor)
-npc_reaction = random.randint(1, npc_total_points - npc_vigor - npc_dexterity)
-npc_total_points -= npc_vigor + npc_dexterity + npc_reaction
-npc_strength = npc_total_points
+import random
 
+import random
+
+npc_total_points = 20
+npc_vigor = 20  # Base vigor
+npc_strength = 2  # Base strength
+npc_dexterity = 20  # Base dexterity
+npc_reaction = 1  # Base reaction
+
+# Randomly select NPC stats
+points_to_add = random.randint(0, npc_total_points)
+npc_vigor += points_to_add
+npc_total_points -= points_to_add
+
+points_to_add = random.randint(0, npc_total_points)
+npc_strength += points_to_add
+npc_total_points -= points_to_add
+
+points_to_add = random.randint(0, npc_total_points)
+npc_dexterity += points_to_add
+npc_total_points -= points_to_add
+
+points_to_add = random.randint(0, npc_total_points)
+npc_reaction += points_to_add
+npc_total_points -= points_to_add
+
+
+
+# Weapons
+weapons = ["sword", "axe", "dagger", "mace", "shield", "staff", "flail"]
+
+# Randomly select a weapon for the NPC
 npc_weapon = random.choice(weapons)
+
+# Randomly select a helmet for the NPC
 npc_helmet = random.choice(["leather helmet", "chain mail", "plate mail"])
+
+# Randomly select a chest plate for the NPC
 npc_chest_plate = random.choice(["leather armor", "chain mail", "plate mail"])
 
-npc_vigor = 20
-npc_strength = 2
-npc_dexterity = 20
-npc_reaction = 1
-
+# Print the NPC's stats
 print("NPC Stats:")
 print("Vigor:", npc_vigor)
 print("Strength:", npc_strength)
@@ -278,7 +303,6 @@ print("Reaction:", npc_reaction)
 print("Weapon:", npc_weapon)
 print("Helmet:", npc_helmet)
 print("Chest Plate:", npc_chest_plate)
-
 
 
 
@@ -448,7 +472,9 @@ while True:
             while vigor or npc_vigor >= 0:
                 clear_terminal
                 print("health:", vigor,                                                                                                         "npc health", npc_vigor)
-
+                print("dexterity:", dexterity,                                                                                                  "npc dexterity", npc_dexterity)
+                print("\n\n\n\n\n")
+                choise = input("choose a move\n")
 
 
 
