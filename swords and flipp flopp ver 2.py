@@ -54,11 +54,46 @@ gender = input("\nPlease select gender (male or female): ").lower()
 name = input("Enter your character's name: ")
 clear_terminal()
 print(f"Your character is {gender.capitalize()} and named {name}.\n")
+clear_terminal()
+
 
 # Stats Distribution
-def stat_distrobution():
-    while skill_points > 0:
-        input("you have 30 point to distribute")
+def stat_distribution():
+    global skill_points, vigor, strength, dexterity, reaction
+    while True:
+        skill_points2 = skill_points
+        vigor = strength = dexterity = reaction = 0
+        choice = input("stat distribution screen. if you want information type (info). to continue, press enter")
+        if choice == "info":
+            print("Vigor: increases the amount of health you have / damage you can absorb.")
+            print("Strength: increase the base amount of damage you deal")
+            print("Dexterity: increases the amount of energy you have to do actions .")
+            print("Reaction: increases the chance of dodging an attack.")
+        else:
+            print(f"You have {skill_points2} points to distribute between vigor, strength, dexterity, and reaction.")
+            ed_vigor = int(input(f"Enter additional vigor: "))
+            ed_strength = int(input(f"Enter additional strength: "))
+            ed_dexterity = int(input(f"Enter additional dexterity: "))
+            ed_reaction = int(input(f"Enter additional reaction: "))
+
+            if ed_vigor + ed_strength + ed_dexterity + ed_reaction <= skill_points2:
+                vigor += ed_vigor
+                strength += ed_strength
+                dexterity += ed_dexterity
+                reaction += ed_reaction
+                skill_points2 -= ed_vigor + ed_strength + ed_dexterity + ed_reaction
+                time.sleep(2)
+                print(f"Your stats: Vigor: {vigor}, Strength: {strength}, Dexterity: {dexterity}, Reaction: {reaction}")
+                choice = input("Are you satisfied with your stats (yes/no)? ")
+                if choice.lower() == "yes":
+                    skill_points = skill_points2
+                    break
+            else:
+                print("You have exceeded the skill points limit. Please try again.")
+
+        
+
+
 
 
 clear_terminal()
