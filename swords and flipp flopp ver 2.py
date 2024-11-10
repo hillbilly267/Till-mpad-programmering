@@ -10,6 +10,7 @@ def clear_terminal():
 balance = 50
 weapon = "N/A"
 armor_inventory = {"helmet": None, "chestplate": None, "leggings": None, "boots": None}
+
 armor_stats = {
     "leather": 2,
     "chainmail": 4,
@@ -50,21 +51,23 @@ time.sleep(2)
 print("Welcome to Swords and Flip-Flops!")
 
 # Character Creation
-gender = input("\nPlease select gender (male or female): ").lower()
+gender = input("\nPlease select gender (male, female or walmart bag): ")
 name = input("Enter your character's name: ")
 clear_terminal()
 print(f"Your character is {gender.capitalize()} and named {name}.\n")
 clear_terminal()
 
 
+
 # Stats Distribution
 def stat_distribution():
     global skill_points, vigor, strength, dexterity, reaction
     while True:
+        skill_points3 = skill_points
         skill_points2 = skill_points
         vigor = strength = dexterity = reaction = 0
         choice = input("stat distribution screen. if you want information type (info). to continue, press enter")
-        if choice == "info":
+        if choice.lower() == "info":
             print("Vigor: increases the amount of health you have / damage you can absorb.")
             print("Strength: increase the base amount of damage you deal")
             print("Dexterity: increases the amount of energy you have to do actions .")
@@ -72,72 +75,93 @@ def stat_distribution():
         else:
             print(f"You have {skill_points2} points to distribute between vigor, strength, dexterity, and reaction.")
             ed_vigor = int(input(f"Enter additional vigor: "))
+            skill_points2 -= ed_vigor
+            print(f"you have {skill_points2} left")
             ed_strength = int(input(f"Enter additional strength: "))
+            skill_points2 -= ed_strength
+            print(f"you have {skill_points2} left")
             ed_dexterity = int(input(f"Enter additional dexterity: "))
+            skill_points2 -= ed_dexterity
+            print(f"you have {skill_points2} left")
             ed_reaction = int(input(f"Enter additional reaction: "))
+            skill_points2 -= ed_reaction
 
-            if ed_vigor + ed_strength + ed_dexterity + ed_reaction <= skill_points2:
+            if ed_vigor + ed_strength + ed_dexterity + ed_reaction <= skill_points3:
                 vigor += ed_vigor
                 strength += ed_strength
                 dexterity += ed_dexterity
                 reaction += ed_reaction
-                skill_points2 -= ed_vigor + ed_strength + ed_dexterity + ed_reaction
+                skill_points3 = skill_points
                 time.sleep(2)
-                print(f"Your stats: Vigor: {vigor}, Strength: {strength}, Dexterity: {dexterity}, Reaction: {reaction}")
+                print(f"Your stats: Vigor: {vigor}, Strength: {strength}, Dexterity: {dexterity}, Reaction: {reaction}\nskil points un-used: {skill_points2}")
                 choice = input("Are you satisfied with your stats (yes/no)? ")
                 if choice.lower() == "yes":
-                    skill_points = skill_points2
+                    skill_points = skill_points3
+                    return vigor, strength, dexterity, reaction, skill_points
                     break
+                else:
+                    clear_terminal()
             else:
+                clear_terminal()
                 print("You have exceeded the skill points limit. Please try again.")
 
         
 
 
 
-
+stat_distribution()
 clear_terminal()
 
 # Armory Functions
 def buy_weapon():
     global balance, weapon
-    print(f"Balance: {balance} gold coins\nAvailable Weapons:")
-    for weapon_name, stats in weapons.items():
-        print(f"{weapon_name.capitalize()} - Damage: {stats[0]}, Dexterity Cost: {stats[1]}, Price: {stats[2]}")
+    print(f"Balance: {balance} gold coins")
+    print("Available Weapons:")
     
-    weapon_choice = input("Enter the weapon name to buy or type 'back' to go back: ").lower()
-    if weapon_choice in weapons:
-        price = weapons[weapon_choice][2]
+    # Show each weapon's details
+    for name, stats in weapons.items():
+        print(f"{name.capitalize()} - Damage: {stats[0]}, Dexterity Cost: {stats[1]}, Price: {stats[2]}")
+    
+    # Get user input
+    choice = input("Enter weapon name to buy or 'back' to go back: ").lower()
+    
+    if choice in weapons:
+        price = weapons[choice][2]
         if balance >= price:
             balance -= price
-            weapon = weapon_choice
-            print(f"You bought a {weapon_choice.capitalize()} for {price} gold!")
+            weapon = choice
+            print(f"You bought a {choice.capitalize()} for {price} gold!")
         else:
-            print("Insufficient funds.")
-    elif weapon_choice != "back":
+            print("Not enough gold.")
+    elif choice != "back":
         print("Invalid option.")
+
 
 def buy_armor():
     global balance
     print(f"Balance: {balance} gold coins\nArmor Categories: Helmet, Chestplate, Leggings, Boots")
     armor_type = input("Choose armor category to buy or 'back' to return: ").lower()
-    
-    if armor_type in armor_shop:
-        print(f"Available {armor_type.capitalize()} Types: Leather, Chainmail, Plate, Tank")
-        for quality, price in armor_shop[armor_type].items():
-            print(f"{quality.capitalize()} - Price: {price}")
+    if armor_type != armor_type.items():
+        if armor_type in armor_shop:
+            clear_terminal()
+            print(f"Available {armor_type.capitalize()} Types: Leather, Chainmail, Plate, Tank")
+            for quality, price in armor_shop[armor_type].items():
+                print(f"{quality.capitalize()} - Price: {price}")
         
-        armor_choice = input("Enter the type of armor to buy or 'back' to return: ").lower()
-        if armor_choice in armor_shop[armor_type]:
-            price = armor_shop[armor_type][armor_choice]
-            if balance >= price:
-                balance -= price
-                armor_inventory[armor_type] = armor_choice
-                print(f"You bought a {armor_choice.capitalize()} {armor_type.capitalize()} for {price} gold!")
-            else:
-                print("Insufficient funds.")
-    elif armor_type != "back":
-        print("Invalid armor category.")
+            armor_choice = input("Enter the type of armor to buy or 'back' to return: ").lower()
+            if armor_choice in armor_shop[armor_type]:
+                price = armor_shop[armor_type][armor_choice]
+                if balance >= price:
+                    balance -= price
+                    armor_inventory[armor_type] = armor_choice
+                    print(f"You bought a {armor_choice.capitalize()} {armor_type.capitalize()} for {price} gold!")
+                else:
+                    print("Insufficient funds.")
+        elif armor_type != "back":
+            print("Invalid armor category.")
+        else:
+            clear_terminal()
+            print("Invalid option")
 
 def sell_equipment():
     global balance
