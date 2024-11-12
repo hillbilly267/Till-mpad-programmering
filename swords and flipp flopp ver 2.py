@@ -7,16 +7,10 @@ def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 # Game Variables
-balance = 50
+balance = 500
 weapon = "N/A"
 armor_inventory = {"helmet": None, "chestplate": None, "leggings": None, "boots": None}
 
-armor_stats = {
-    "leather": 2,
-    "chainmail": 4,
-    "plate": 6,
-    "tank": 8
-}
 
 # Weapons and Armor Shops
 weapons = {
@@ -29,11 +23,32 @@ weapons = {
     "flail": [6, 6, 35]
 }
 
-armor_shop = {
-    "helmet": {"leather": 20, "chainmail": 40, "plate": 60, "tank": 80},
-    "chestplate": {"leather": 40, "chainmail": 60, "plate": 80, "tank": 100},
-    "leggings": {"leather": 32, "chainmail": 52, "plate": 72, "tank": 88},
-    "boots": {"leather": 16, "chainmail": 36, "plate": 56, "tank": 76}
+# Armor Shop
+armor = {
+    "helmet": {
+        "leather": [20, 1, 1],
+        "chainmail": [40, 2, 2],
+        "plate": [60, 4, 4],
+        "tank": [80, 8, 8]
+    },
+    "chestplate": {
+        "leather": [40, 2, 1],
+        "chainmail": [60, 4, 2],
+        "plate": [80, 6, 4],
+        "tank": [100, 12, 8]
+    },
+    "leggings": {
+        "leather": [32, 2, 1],
+        "chainmail": [52, 4, 2],
+        "plate": [72, 6, 4],
+        "tank": [88, 12, 8]
+    },
+    "boots": {
+        "leather": [16, 1, 1],
+        "chainmail": [36, 2, 2],
+        "plate": [56, 4, 4],
+        "tank": [76, 8, 8]
+    }
 }
 
 # player stats
@@ -95,7 +110,7 @@ def stat_distribution():
                 time.sleep(2)
                 print(f"Your stats: Vigor: {vigor}, Strength: {strength}, Dexterity: {dexterity}, Reaction: {reaction}\nskil points un-used: {skill_points2}")
                 choice = input("Are you satisfied with your stats (yes/no)? ")
-                if choice.lower() == "yes":
+                if choice.lower() == "yes" or "":
                     skill_points = skill_points3
                     return vigor, strength, dexterity, reaction, skill_points
                     break
@@ -131,6 +146,7 @@ def buy_weapon():
             balance -= price
             weapon = choice
             print(f"You bought a {choice.capitalize()} for {price} gold!")
+            time.sleep(1)
         else:
             print("Not enough gold.")
     elif choice != "back":
@@ -139,54 +155,65 @@ def buy_weapon():
 
 def buy_armor():
     global balance
-    print(f"Balance: {balance} gold coins\nArmor Categories: Helmet, Chestplate, Leggings, Boots")
+    print(f"Balance: {balance} gold coins")
+    print("Armor Categories: Helmet, Chestplate, Leggings, Boots")
     armor_type = input("Choose armor category to buy or 'back' to return: ").lower()
-    if armor_type != armor_type.items():
-        if armor_type in armor_shop:
-            clear_terminal()
-            print(f"Available {armor_type.capitalize()} Types: Leather, Chainmail, Plate, Tank")
-            for quality, price in armor_shop[armor_type].items():
-                print(f"{quality.capitalize()} - Price: {price}")
+    
+    if armor_type in armor:
+        clear_terminal()
+        print(f"Available {armor_type.capitalize()} Types:")
+        for armor_quality, stats in armor[armor_type].items():
+            print(f"{armor_quality.capitalize()}: Price: {stats[0]}, Defense: {stats[1]}, Weight: {stats[2]}")
         
-            armor_choice = input("Enter the type of armor to buy or 'back' to return: ").lower()
-            if armor_choice in armor_shop[armor_type]:
-                price = armor_shop[armor_type][armor_choice]
-                if balance >= price:
-                    balance -= price
-                    armor_inventory[armor_type] = armor_choice
-                    print(f"You bought a {armor_choice.capitalize()} {armor_type.capitalize()} for {price} gold!")
-                else:
-                    print("Insufficient funds.")
-        elif armor_type != "back":
-            print("Invalid armor category.")
-        else:
-            clear_terminal()
-            print("Invalid option")
+        armor_choice = input("Enter the type of armor to buy or 'back' to return: ").lower()
+        if armor_choice in armor[armor_type]:
+            price = armor[armor_type][armor_choice][0]
+            if balance >= price:
+                balance -= price
+                armor_inventory[armor_type] = armor_choice
+                print(f"You bought a {armor_choice.capitalize()} {armor_type} for {price} gold!")
+            else:
+                print("Insufficient funds.")
+        elif armor_choice != "back":
+            print("Invalid armor type.")
+    elif armor_type != "back":
+        print("Invalid armor category.")
 
 def sell_equipment():
-    global balance
+    global balance, weapon
     print("Items you can sell:")
     for armor_type, armor_quality in armor_inventory.items():
         if armor_quality:
-            sell_price = armor_shop[armor_type][armor_quality] // 2
+            sell_price = armor[armor_type][armor_quality][0] // 2
             print(f"{armor_quality.capitalize()} {armor_type.capitalize()} - Sell Price: {sell_price}")
 
+    if weapon != "N/A":
+        weapon_sell_price = weapons[weapon][2] // 2
+        print(f"{weapon.capitalize()} - Sell Price: {weapon_sell_price}")
     equipment = input("Enter the equipment type to sell or 'back' to go back: ").lower()
     if equipment in armor_inventory and armor_inventory[equipment]:
         armor_quality = armor_inventory[equipment]
-        sell_price = armor_shop[equipment][armor_quality] // 2
+        sell_price = armor[equipment][armor_quality][0] // 2
         balance += sell_price
         armor_inventory[equipment] = None
         print(f"You sold your {armor_quality.capitalize()} {equipment.capitalize()} for {sell_price} gold!")
+    elif equipment == weapon:
+        sell_price = weapons[weapon][2] // 2
+        balance += sell_price
+        weapon = "N/A"
+        print(f"You sold your {equipment.capitalize()} for {sell_price} gold!")
     elif equipment != "back":
         print("Invalid choice or no item to sell in that category.")
+
+
+
 
 # Battle Arena
 def calculate_damage_reduction():
     total_reduction = 0
-    for armor in armor_inventory.values():
-        if armor:
-            total_reduction += armor_stats[armor]
+    for armor_type, armor_quality in armor_inventory.items():
+        if armor_quality:
+            total_reduction += armor[armor_type][armor_quality][1]
     return total_reduction
 
 def generate_npc():
@@ -203,6 +230,100 @@ def generate_animal():
     ]
     return random.choice(animals)
 
+# battle function
+def battle(npc):
+    global skill_points, balance, player_level, vigor, dexterity, strength, weapon, reaction, armor_inventory
+
+    print(f"You are fighting against {npc['name']}!")
+    print("Battle starts now!")
+    
+    start_time = time.time()
+    time_limit = 120
+
+    player_max_vigor = vigor * 10  # Assuming vigor determines max health
+    player_vigor = player_max_vigor
+    player_max_dexterity = dexterity * 10  # Assuming dexterity determines max energy
+    player_dexterity = player_max_dexterity
+
+    while True:
+        elapsed_time = time.time() - start_time
+        if elapsed_time > time_limit:
+            print("Time is up! The bravest gladiator wins!")
+            skill_points += 1
+            break
+
+        print(f"\nYour Health: {player_vigor}/{player_max_vigor}, Energy: {player_dexterity}/{player_max_dexterity}")
+        print(f"Enemy Health: {npc['vigor']}")
+        print("Choose your action:")
+        print("1. Quick Attack (90% chance)")
+        print("2. Normal Attack (60% chance)")
+        print("3. Heavy Attack (40% chance)")
+        print("4. Recover")
+        print("5. Surrender")
+
+        action = input("Enter your choice: ")
+        attack_cost = weapons[weapon][1] if weapon != "N/A" else 0
+
+        if action == "5":
+            print("You have surrendered!")
+            balance -= 20
+            break
+
+        if player_dexterity < attack_cost:
+            print("Not enough energy to perform that action!")
+            continue
+
+        if action == "1":
+            hit_chance, min_damage, max_damage = 0.9, 1, (strength + weapons[weapon][0])
+        elif action == "2":
+            hit_chance, min_damage, max_damage = 0.6, (strength + weapons[weapon][0]), (strength + weapons[weapon][0]) * 2
+        elif action == "3":
+            hit_chance, min_damage, max_damage = 0.4, (strength + weapons[weapon][0]) * 2, (strength + weapons[weapon][0]) * 3
+        elif action == "4":
+            recovery = random.randint(5, 10)
+            player_dexterity = min(player_dexterity + recovery, player_max_dexterity)
+            print(f"You recovered {recovery} energy!")
+            continue
+        else:
+            print("Invalid action. Try again.")
+            continue
+
+        player_dexterity -= attack_cost
+
+        if random.random() <= hit_chance:
+            damage = random.randint(min_damage, max_damage)
+            npc['vigor'] -= damage
+            print(f"You dealt {damage} damage to {npc['name']}!")
+        else:
+            print("Your attack missed!")
+
+        if npc['vigor'] <= 0:
+            print(f"You have defeated {npc['name']}!")
+            skill_points += 2
+            player_level += 1
+            balance += random.randint(10, 50)  # Random gold reward
+            print(f"You leveled up to {player_level} and earned some gold!")
+            break
+
+        dodge_chance = min(20, reaction) / 100
+        if random.random() < dodge_chance:
+            print(f"You dodged {npc['name']}'s attack!")
+            continue
+
+        npc_damage = random.randint(1, npc['strength'])
+        damage_reduction = sum(armor[type][quality][1] for type, quality in armor_inventory.items() if quality) / 100
+        reduced_damage = max(1, int(npc_damage * (1 - damage_reduction)))
+        player_vigor -= reduced_damage
+        print(f"{npc['name']} attacked and dealt {reduced_damage} damage (after reduction)!")
+        
+        if player_vigor <= 0:
+            print("You have been defeated!")
+            balance -= 20
+            break
+
+    # Update global variables
+    vigor = player_vigor // 10
+    dexterity = player_dexterity // 10
 # Battle function
 def battle(npc):
     global skill_points, balance, player_level, vigor, dexterity, strength, weapon, reaction
