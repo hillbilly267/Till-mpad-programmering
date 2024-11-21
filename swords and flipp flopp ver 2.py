@@ -220,35 +220,38 @@ def battle_choise():
     print("4: recover dexterity")
     choice = input("Choose option: ")
 
+    damage = 0  # Initialize damage variable
+    dex_cost = 0  # Initialize dex_cost variable
+
     if choice == "1" or choice.lower() == "quick attack":
         clear_terminal()
-        if random.random() > 10 and dexterity > 2:
+        dex_cost = 2
+        if random.random() > 10 and dexterity > dex_cost:
             damage = 0.4 * strength + weapon[0]
-            dex_cost = 2
-            print(f"You did {damage} to apponent")
+            print(f"You did {damage} damage to apponent")
         else:
             print("Attack failed.")
 
     elif choice == "2" or choice.lower() == "normal attack":
         clear_terminal()
-        if random.random() > 40 and dexterity > 4:
+        dex_cost = 4
+        if random.random() > 40 and dexterity > dex_cost:
             damage = 0.6 * strength + weapon[0]
-            dex_cost = 4
-            print(f"You did {damage} to apponent")
+            print(f"You did {damage} damage to apponent")
         else:
             print("Attack failed.")
 
     elif choice == "3" or choice.lower() == "heavy attack":
         clear_terminal()
-        if random.random() > 40 and dexterity > 6:
+        dex_cost = 6
+        if random.random() > 40 and dexterity > dex_cost:
             damage = strength + weapon[0]
-            dex_cost = 6
-            print(f"You did {damage} to apponent")
+            print(f"You did {damage} damage to apponent")
         else:
             print("Attack failed.")
 
     elif choice == "4" or choice.lower() == "recover dexterity":
-        regeneration = 0.3 * dexterity
+        regeneration = 0.5 * dexterity
         dexterity += regeneration
         print(f"Dexterity regenerates by {regeneration} points.")
 
@@ -266,45 +269,43 @@ def battle_choise():
 def npc_battle_choise():
     global npc_dexterity, npc_strength
     if npc_dexterity < 6:
-        npc_choice == 4
+        npc_choice = 4
     else:
         npc_choice = random.randint(1,4)
 
+    dex_cost = random.randint(1, 6)  # Add this line to generate a random dexterity cost
+    npc_damage = 0  # Initialize npc_damage variable
+
     if npc_choice == "1" or choice.lower() == "quick attack":
-        clear_terminal()
-        if random.random(0, 100) > 10 and npc_dexterity > 2:
-            npc_damage = 0.4 * strength + weapon[0]
-            dex_cost = 2
-            print(f"he did {npc_damage} to apponent")
+        if random.randint(0, 100) > 10 and npc_dexterity > dex_cost:
+            npc_damage = 0.4 * npc_strength + weapon[0]
+            print(f"{npc_name} did {npc_damage} damage to you!")
         else:
-            print("npc attack failed.")
+            print(f"{npc_name} tried to attack but didn't have enough dexterity.")
 
     elif npc_choice == "2" or choice.lower() == "normal attack":
-        clear_terminal()
-        if random.random(0, 100) > 40 and npc_dexterity > 4:
-            npc_damage = 0.6 * strength + weapon[0]
-            dex_cost = 4
-            print(f"he did {npc_damage} to apponent")
+        if random.randint(0, 100) > 40 and npc_dexterity > dex_cost:
+            npc_damage = 0.6 * npc_strength + weapon[0]
+            print(f"{npc_name} did {npc_damage} damage to you!")
         else:
-            print("npc attack failed.")
+            print(f"{npc_name} tried to attack but didn't have enough dexterity.")
 
     elif npc_choice == "3" or choice.lower() == "heavy attack":
-        clear_terminal()
-        if random.random(0, 100) > 40 and npc_dexterity > 6:
-            npc_damage = strength + weapon[0]
-            dex_cost = 6
-            print(f"he did {npc_damage} to apponent")
+        if random.randint(0, 100) > 40 and npc_dexterity > dex_cost:
+            npc_damage = npc_strength + weapon[0]
+            print(f"{npc_name} did {npc_damage} damage to you!")
         else:
-            print("npc attack failed.")
+            print(f"{npc_name} tried to attack but didn't have enough dexterity.")
 
     elif npc_choice == "4" or choice.lower() == "recover dexterity":
-        regeneration = 0.3 * dexterity
+        regeneration = 0.3 * npc_dexterity
         npc_dexterity += regeneration
-        print(f"Dexterity regenerates by {regeneration} points.")
+        print(f"{npc_name} regenerates {regeneration} points of dexterity.")
 
     return dex_cost, npc_damage, npc_choice
 
 
+# damage calculation
 def calculate_damage_reduction():
     global armor_inventory, armor_type, armor_quality, shield, dexterity
     total_reduction = 0
@@ -316,52 +317,57 @@ def calculate_damage_reduction():
             total_reduction += armor[armor_type][armor_quality][1]
     return total_reduction, dexterity
 
-
-
-
-def generate_npc():
-  global player_level
-  npc_skillpoint = 30 
-  npc_skillpoint += player_level * 2
-  npc_skillpoint2 = npc_skillpoint
-  npc_vigor = random.randint(5,npc_skillpoint2)
-  npc_skillpoint2 -= npc_vigor
-  npc_strength = random.randint(1, npc_skillpoint2)
-  npc_skillpoint2 -= npc_strength
-  npc_dexterity = random.randint(1, npc_skillpoint2)
-
-  npc_name = "gladiator"
-  if random.randint(0, 100) > 20:
-      npc_name = "Gladiator"
-  elif random.randint(0, 100) > 50:
-      npc_name = "Wolf"
-  else:
-      npc_name = "Bear"
-
-  return {npc_name, npc_vigor, npc_strength, npc_dexterity, npc_reaction,}
-
 npc_name = 0
 npc_vigor = 0
 npc_strength = 0
 npc_dexterity = 0
-npc_reaction = 0
+
+
+# npc generator
+def generate_npc():
+    global player_level
+    npc_skillpoint = 30 
+    npc_skillpoint += player_level * 3
+    npc_skillpoint2 = npc_skillpoint
+    npc_vigor = random.randint(0, npc_skillpoint2)
+    npc_skillpoint2 -= npc_vigor
+    npc_strength = random.randint(0, npc_skillpoint2)
+    npc_skillpoint2 -= npc_strength
+    npc_dexterity = random.randint(0, npc_skillpoint2)
+    
+    npc_vigor += 20
+    npc_strength += 5
+    npc_dexterity += 20
+
+    npc_name_generated = "gladiator"
+    if random.randint(0, 100) > 20:
+        npc_name_generated = "Gladiator"
+    elif random.randint(0, 100) > 50:
+        npc_name_generated = "Wolf"
+    else:
+        npc_name_generated = "Bear"
+
+    return npc_name_generated, npc_vigor, npc_strength, npc_dexterity
+
+
 
 
 # Battle Arena
 def battle_arena():
-    global skill_points, balance, player_level, vigor, dexterity, strength, weapon, reaction, armor_inventory
-    global npc_name, npc_vigor, npc_strength, npc_dexterity, npc_reaction
+    npc_data = generate_npc()
+    global skill_points, balance, player_level, vigor, dexterity, strength, weapon, armor_inventory
+    global npc_name, npc_vigor, npc_strength, npc_dexterity
     global armor_inventory, armor_type, armor_quality, shield, dexterity
     
-    npc_data = generate_npc()
-    npc_name, npc_vigor, npc_strength, npc_dexterity, npc_reaction = npc_data
+   
+    npc_name, npc_vigor, npc_strength, npc_dexterity = npc_data
     
     print(f"You are fighting against {npc_name}!")
     print("Battle starts now!")
     
     # Battle timer setup
     start_time = time.time()
-    time_limit = 320
+    time_limit = 120
     
     while True:
         # Check for time limit
