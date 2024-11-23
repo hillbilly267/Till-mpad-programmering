@@ -66,6 +66,33 @@ print("Loading game...")
 time.sleep(2)
 print("Welcome to Swords and Flip-Flops!")
 
+# difficulty selection
+while True:
+    difficulty = input("Choose difficulty (easy, medium, hard, GIVE ME HELL): ").lower()
+    clear_terminal()
+    print(f"You've chosen {difficulty} difficulty.\n")
+    time.sleep(2)
+    clear_terminal()
+
+    diff_level = 0
+    if difficulty == "easy":
+        diff_level = 2
+        break
+    elif difficulty == "medium":
+        diff_level = 3
+        break
+    elif difficulty == "hard":
+        diff_level = 5
+        break
+    elif difficulty == "GIVE ME HELL":
+        diff_level = 15
+        break
+    else:
+        clear_terminal()
+        print("Invalid option. Please try again.")
+
+
+
 # Character Creation
 gender = input("\nPlease select gender (male, female or walmart bag): ")
 name = input("Enter your character's name: ")
@@ -325,9 +352,9 @@ npc_dexterity = 0
 
 # npc generator
 def generate_npc():
-    global player_level
+    global player_level, diff_level
     npc_skillpoint = 30 
-    npc_skillpoint += player_level * 3
+    npc_skillpoint += player_level * diff_level
     npc_skillpoint2 = npc_skillpoint
     npc_vigor = random.randint(0, npc_skillpoint2)
     npc_skillpoint2 -= npc_vigor
