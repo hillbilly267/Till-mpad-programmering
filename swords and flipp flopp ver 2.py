@@ -8,10 +8,9 @@ def clear_terminal():
 
 # Game Variables
 balance = 500
-weapon = "N/A"
+weapon = None
 shield = "N/A"
 armor_inventory = {"helmet": None, "chestplate": None, "leggings": None, "boots": None}
-
 
 # Weapons and Armor Shops
 weapons = {
@@ -24,7 +23,6 @@ weapons = {
     "flail": [6, 6, 35]
 }
 
-# Armor Shop
 armor = {
     "helmet": {
         "leather": [20, 1, 1],
@@ -52,7 +50,7 @@ armor = {
     }
 }
 
-# player stats
+# Player Stats
 vigor = 0
 strength = 0
 dexterity = 0
@@ -66,7 +64,7 @@ print("Loading game...")
 time.sleep(2)
 print("Welcome to Swords and Flip-Flops!")
 
-# difficulty selection
+# Difficulty Selection
 while True:
     difficulty = input("Choose difficulty (easy, medium, hard, GIVE ME HELL): ").lower()
     clear_terminal()
@@ -74,7 +72,6 @@ while True:
     time.sleep(2)
     clear_terminal()
 
-    diff_level = 0
     if difficulty == "easy":
         diff_level = 2
         break
@@ -84,20 +81,19 @@ while True:
     elif difficulty == "hard":
         diff_level = 5
         break
-    elif difficulty == "GIVE ME HELL":
+    elif difficulty == "give me hell":
         diff_level = 15
         break
     else:
         clear_terminal()
         print("Invalid option. Please try again.")
 
-
-
 # Character Creation
 gender = input("\nPlease select gender (male, female or walmart bag): ")
 name = input("Enter your character's name: ")
 clear_terminal()
 print(f"Your character is {gender.capitalize()} and named {name}.\n")
+time.sleep(2)
 clear_terminal()
 
 
@@ -114,7 +110,7 @@ def stat_distribution():
             print("Strength: increase the base amount of damage you deal")
             print("Dexterity: increases the amount of energy you have to do actions .")
         else:
-            print(f"You have {skill_points2} points to distribute between vigor, strength, dexterity, and reaction.")
+            print(f"You have {skill_points2} points to distribute between vigor, strength and dexterity.")
             ed_vigor = int(input(f"Enter additional vigor: "))
             skill_points2 -= ed_vigor
             print(f"you have {skill_points2} left")
@@ -150,18 +146,18 @@ clear_terminal()
 
 # Armory Functions
 def buy_weapon():
-    global balance, weapon, shield
+    global balance, weapon, shield, weapons
     print(f"Balance: {balance} gold coins")
     print("Available Weapons:")
-    
+
     # Show each weapon's details
     for name, stats in weapons.items():
         print(f"{name.capitalize()} - Damage: {stats[0]}, Dexterity Cost: {stats[1]}, Price: {stats[2]}")
-    
+
     # Get user input
     choice = input("Enter weapon name to buy or 'back' to go back: ").lower()
-    
-    if choice in weapons == "shield":
+
+    if choice == "shield":
         price = weapons[choice][2]
         if balance >= price:
             balance -= price
@@ -174,12 +170,14 @@ def buy_weapon():
         price = weapons[choice][2]
         if balance >= price:
             balance -= price
-            weapon = choice
+            weapon = choice  # Store only the weapon name, not the stats
             print(f"You bought a {choice.capitalize()} for {price} gold!")
             time.sleep(1)
-
+        else:
+            print("Not enough gold.")
     elif choice != "back":
         print("Invalid option.")
+
 
 
 def buy_armor():
@@ -198,7 +196,7 @@ def buy_armor():
         if armor_choice in armor[armor_type]:
             price = armor[armor_type][armor_choice][0]
             if balance >= price:
-                balance -= price
+                balance -= int(price)
                 armor_inventory[armor_type] = armor_choice
                 print(f"You bought a {armor_choice.capitalize()} {armor_type} for {price} gold!")
             else:
@@ -217,8 +215,9 @@ def sell_equipment():
             print(f"{armor_quality.capitalize()} {armor_type.capitalize()} - Sell Price: {sell_price}")
 
     if weapon != "N/A":
-        weapon_sell_price = weapons[weapon][2]
+        weapon_sell_price = weapons[weapon][2]  # Use weapon name to get its price
         print(f"{weapon.capitalize()} - Sell Price: {weapon_sell_price}")
+
     equipment = input("Enter the equipment type to sell or 'back' to go back: ").lower()
     if equipment in armor_inventory and armor_inventory[equipment]:
         armor_quality = armor_inventory[equipment]
@@ -229,68 +228,58 @@ def sell_equipment():
     elif equipment == weapon:
         sell_price = weapons[weapon][2]
         balance += sell_price
-        weapon = "N/A"
         print(f"You sold your {equipment.capitalize()} for {sell_price} gold!")
+        weapon = "N/A"  # Reset weapon to no weapon
     elif equipment != "back":
         print("Invalid choice or no item to sell in that category.")
 
 
 
 
+weapon = "Sword"
 # Battle functions
-
+use_dexterity = dexterity
 def battle_choise():
     global weapon, dexterity, strength, balance
-    print("\n1: quick attack: 2 dextarity cost")
-    print("2: normal attack: 4 dextarity cost")
-    print("3: heavy attack: 6 dextarity cost")
-    print("4: recover dexterity")
-    choice = input("Choose option: ")
+    print("\n1: Quick attack. Dexterity cost: 2\n2: Normal attack. Dexterity cost: 4\n3: Heavy attack. Dexterity cost: 6\n4: Recover dexterity\n5: surrender")
+    choice = input("Choose option: ")   
+    use_dexterity = dexterity
+    damage = 0
 
-    damage = 0  # Initialize damage variable
-    dex_cost = 0  # Initialize dex_cost variable
-
-    if choice == "1" or choice.lower() == "quick attack":
-        clear_terminal()
+    if choice == "1":
         dex_cost = 2
-        if random.random() > 10 and dexterity > dex_cost:
-            damage = 0.4 * strength + weapon[0]
-            print(f"You did {damage} damage to apponent")
+        if isinstance(weapon, list) and len(weapon) >= 2:
+            damage = int(0.04 * (strength + int(weapon[1])))
         else:
-            print("Attack failed.")
-
-    elif choice == "2" or choice.lower() == "normal attack":
-        clear_terminal()
+            print("Invalid weapon. Please buy a weapon first.")
+            return None
+    elif choice == "2":
         dex_cost = 4
-        if random.random() > 40 and dexterity > dex_cost:
-            damage = 0.6 * strength + weapon[0]
-            print(f"You did {damage} damage to apponent")
+        if isinstance(weapon, list) and len(weapon) >= 2:
+            damage = int(0.6 * strength + int(weapon[0]))
         else:
-            print("Attack failed.")
-
-    elif choice == "3" or choice.lower() == "heavy attack":
-        clear_terminal()
+            print("Invalid weapon. Please buy a weapon first.")
+            return None
+    elif choice == "3":
         dex_cost = 6
-        if random.random() > 40 and dexterity > dex_cost:
-            damage = strength + weapon[0]
-            print(f"You did {damage} damage to apponent")
+        if isinstance(weapon, list) and len(weapon) >= 2:
+            damage = strength + int(weapon[0])
         else:
-            print("Attack failed.")
-
-    elif choice == "4" or choice.lower() == "recover dexterity":
+            print("Invalid weapon. Please buy a weapon first.")
+            return None
+    elif choice == "4":
         regeneration = 0.5 * dexterity
         dexterity += regeneration
-        print(f"Dexterity regenerates by {regeneration} points.")
-
-    elif choice == 4 or choice.lower() == "give up":
-        print("You give up but will be punished")
-        balance -= 100 
-
+        print(f"Dexterity regenerates {regeneration} points.")
+        return None
+    elif choice == "5":
+        print("You srrender")
+        print("You lost")
     else:
-        clear_terminal()
         print("Invalid choice.")
+        return None
 
-    return dex_cost, damage, balance, choice
+    return dex_cost, damage, balance, choice, use_dexterity
     
 
 def npc_battle_choise():
@@ -382,11 +371,10 @@ def generate_npc():
 # Battle Arena
 def battle_arena():
     npc_data = generate_npc()
-    global skill_points, balance, player_level, vigor, dexterity, strength, weapon, armor_inventory
+    global skill_points, balance, player_level, vigor, use_dexterity, strength, weapon, armor_inventory
     global npc_name, npc_vigor, npc_strength, npc_dexterity
     global armor_inventory, armor_type, armor_quality, shield, dexterity
     
-   
     npc_name, npc_vigor, npc_strength, npc_dexterity = npc_data
     
     print(f"You are fighting against {npc_name}!")
@@ -406,20 +394,19 @@ def battle_arena():
 
         # Display time left and health stats
         print(f"\nTime left: {time_limit - elapsed_time:.2f} seconds")
-        print(f"Your health: {vigor}, Your dexterity: {dexterity}")
-        print(f"{npc_name} health: {npc_vigor}, {npc_name} dexterity: {npc_dexterity}")
+        print(f"Your health: {vigor}, Your dexterity: {use_dexterity}")
+        print(f"{npc_name}'s health: {npc_vigor}, {npc_name}'s dexterity: {npc_dexterity}")
 
         # Player's turn
         player_action = battle_choise()
         if player_action:
-            dex_cost, damage, balance, choice = player_action
-            if dex_cost <= dexterity:
-                dexterity -= dex_cost 
+            dex_cost, damage, balance, choice, use_dexterity = player_action
+            if dex_cost <= use_dexterity:
+                use_dexterity -= dex_cost 
                 npc_vigor -= damage
-                print(f"You inflicted {damage} damage to {npc_name}!")
 
                 # Check if NPC is defeated
-                if npc_vigor <= 0:
+                if npc_vigor <= 0:  # Corrected condition
                     print(f"Congratulations! You defeated {npc_name}.")
                     skill_points += 5
                     player_level += 1
@@ -427,6 +414,10 @@ def battle_arena():
                     break
             else:
                 print("Not enough dexterity for that action.")
+        elif player_action == 5:
+            time.sleep(2)
+            balance -= 100
+            break
         else:
             print("Invalid choice. Try again.")
         
@@ -434,15 +425,15 @@ def battle_arena():
         npc_action = npc_battle_choise()
         if npc_action:
             npc_dex_cost, npc_damage, npc_choice = npc_action
-        if npc_dex_cost <= npc_dexterity:
-            npc_dexterity -= npc_dex_cost
-            total_reduction, dexterity = calculate_damage_reduction()
-            npc_damage -= total_reduction
-            vigor -= npc_damage
-            print(f"{npc_name} inflicted {npc_damage} damage on you!")
+            if npc_dex_cost <= npc_dexterity:
+                npc_dexterity -= npc_dex_cost
+                total_reduction, dexterity = calculate_damage_reduction()
+                npc_damage = max(0, npc_damage - total_reduction)  # Prevent negative damage
+                vigor -= npc_damage
+                print(f"{npc_name} inflicted {npc_damage} damage on you!")
 
                 # Check if player is defeated
-            if vigor <= 0:
+                if vigor <= 0:
                     print("You have been defeated. Better luck next time!")
                     skill_points -= 1
                     balance -= 50  # Penalty for losing
@@ -453,6 +444,8 @@ def battle_arena():
         # Check for end conditions
         if vigor <= 0 or npc_vigor <= 0:
             break
+
+    
 
         
 
