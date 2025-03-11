@@ -1,18 +1,15 @@
 import time
 import os
+import random
 
 def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def printtextanimation(text, animation_speed=0.03
-,):
-    repetitions=1
-    for _ in range(repetitions):
-        for char in text:
-            print(char, end='', flush=True)
-            time.sleep(animation_speed)
-        print()
-
+def printtextanimation(text, animation_speed=0.03):
+    for char in text:
+        print(char, end='', flush=True)
+        time.sleep(animation_speed)
+    print()
 
 def title():
     printtextanimation("""  
@@ -27,17 +24,17 @@ def title():
 def start():
     time.sleep(1)
     printtextanimation("\n Press enter to continue")
-    x=input ()
-    if x=="":
+    x = input()
+    if x == "":
         cls()
         print("\n")
         printtextanimation("PRISON BREAK")
         time.sleep(1)
         print("\n")
-        printtextanimation("You'r sentance has been ruled")
+        printtextanimation("Your sentence has been ruled")
         time.sleep(1)
         print("\n")
-        printtextanimation("You have ben taken to the jail cell")
+        printtextanimation("You have been taken to the jail cell")
         time.sleep(1)
         print("\n")
         printtextanimation("You will be given 30 minutes to escape")
@@ -48,14 +45,8 @@ def start():
         print("\n")
         printtextanimation("Press enter to continue")
         input()
-        x = input()
-        if x=="":
-            cls()
-            first_cell()
-        else:
-            printtextanimation("Invalid")
-            cls()
-            start()
+        cls()
+        first_cell()
     else:
         printtextanimation("Invalid")
         cls()
@@ -150,7 +141,7 @@ def guard_room():
         printtextanimation("You successfully knock out the guard, but the commotion attracts attention. You're caught. Game Over.")
         game_over()
     elif choice == "3":
-        sick_escape()
+        infirmary_room()
     else:
         printtextanimation("Invalid choice. Try again.")
         guard_room()
@@ -338,20 +329,215 @@ def freedom():
     exit()
 
 def game_over():
-    printtextanimation("\nGame Over! Better luck next time.")
-    printtextanimation("Do you want to play again? (yes/no)")
-    choice = input().lower()
-    if choice == "yes":
+    printtextanimation("\nGame Over. Try again?")
+    choice = input("Enter 'yes' to restart or 'no' to exit: ").lower()
+    if choice == 'yes':
         cls()
-        first_cell()
+        start()
     else:
-        printtextanimation("Thanks for playing Prison Break!")
         exit()
 
+def library_room():
+    printtextanimation("\nYou find yourself in the prison library, filled with books and a few inmates.")
+    time.sleep(1)
+    printtextanimation("You notice a suspicious book that seems out of place.")
+    printtextanimation("\nWhat do you do?")
+    printtextanimation("1. Pull the book")
+    printtextanimation("2. Ignore it and look for another way out")
+    printtextanimation("3. Ask an inmate for help")
+    
+    choice = input("Enter your choice (1/2/3): ")
+    if choice == "1":
+        secret_passage()
+    elif choice == "2":
+        printtextanimation("You find nothing else of interest. You're caught by guards. Game Over.")
+        game_over()
+    elif choice == "3":
+        printtextanimation("The inmate betrays you to the guards. Game Over.")
+        game_over()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        library_room()
 
+def secret_passage():
+    printtextanimation("\nThe bookcase slides open, revealing a secret passage.")
+    time.sleep(1)
+    printtextanimation("You enter the passage and find yourself in a dimly lit tunnel.")
+    printtextanimation("\nWhich direction do you go?")
+    printtextanimation("1. Left")
+    printtextanimation("2. Right")
+    
+    choice = input("Enter your choice (1/2): ")
+    if choice == "1":
+        printtextanimation("You encounter a dead end. You're caught. Game Over.")
+        game_over()
+    elif choice == "2":
+        printtextanimation("The tunnel leads to a hidden exit. You're free!")
+        freedom()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        secret_passage()
+
+def infirmary_room():
+    printtextanimation("\nYou sneak into the infirmary, hoping to find a way out.")
+    time.sleep(1)
+    printtextanimation("You see a window slightly ajar and a medicine cabinet.")
+    printtextanimation("\nWhat do you do?")
+    printtextanimation("1. Climb out the window")
+    printtextanimation("2. Search the cabinet for useful items")
+    printtextanimation("3. Hide and wait for an opportunity")
+    
+    choice = input("Enter your choice (1/2/3): ")
+    if choice == "1":
+        printtextanimation("You successfully escape through the window!")
+        freedom()
+    elif choice == "2":
+        printtextanimation("You find nothing useful and are caught. Game Over.")
+        game_over()
+    elif choice == "3":
+        printtextanimation("You wait too long and are discovered. Game Over.")
+        game_over()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        infirmary_room()
+
+def workshop_room():
+    printtextanimation("\nYou enter the workshop, filled with tools and materials.")
+    time.sleep(1)
+    printtextanimation("You could potentially craft something useful.")
+    printtextanimation("\nWhat do you do?")
+    printtextanimation("1. Create a makeshift weapon")
+    printtextanimation("2. Build a tool to aid your escape")
+    printtextanimation("3. Look for an exit")
+    
+    choice = input("Enter your choice (1/2/3): ")
+    if choice == "1":
+        printtextanimation("The weapon is discovered during a search. Game Over.")
+        game_over()
+    elif choice == "2":
+        printtextanimation("You craft a tool and use it to escape!")
+        freedom()
+    elif choice == "3":
+        printtextanimation("You find a hidden door leading outside!")
+        freedom()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        workshop_room()
+
+def cafeteria_room():
+    printtextanimation("\nYou find yourself in the cafeteria, bustling with activity.")
+    time.sleep(1)
+    printtextanimation("You notice a door marked 'Staff Only'.")
+    printtextanimation("\nWhat do you do?")
+    printtextanimation("1. Enter the staff door")
+    printtextanimation("2. Blend in with the crowd")
+    printtextanimation("3. Cause a distraction")
+    
+    choice = input("Enter your choice (1/2/3): ")
+    if choice == "1":
+        printtextanimation("The staff door leads to a service corridor. You're free!")
+        freedom()
+    elif choice == "2":
+        printtextanimation("You're recognized and caught. Game Over.")
+        game_over()
+    elif choice == "3":
+        printtextanimation("The distraction works, and you slip away!")
+        freedom()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        cafeteria_room()
+
+def laundry_room():
+    printtextanimation("\nDisguised as a kitchen worker, you make your way to the laundry room.")
+    time.sleep(1)
+    printtextanimation("You see an opportunity to escape through the laundry chute.")
+    printtextanimation("\nWhat do you do?")
+    printtextanimation("1. Slide down the laundry chute")
+    printtextanimation("2. Hide in a laundry cart")
+    printtextanimation("3. Try to blend in with the laundry workers")
+    
+    choice = input("Enter your choice (1/2/3): ")
+    if choice == "1":
+        printtextanimation("The chute leads to a dead end. You're discovered and caught. Game Over.")
+        game_over()
+    elif choice == "2":
+        freedom()
+    elif choice == "3":
+        printtextanimation("A supervisor notices you're not supposed to be there. You're caught. Game Over.")
+        game_over()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        laundry_room()
+
+def warden_office():
+    printtextanimation("\nYou've managed to sneak into the warden's office.")
+    time.sleep(1)
+    printtextanimation("You see a computer, a safe, and a window overlooking the prison yard.")
+    printtextanimation("\nWhat's your next move?")
+    printtextanimation("1. Try to access the computer")
+    printtextanimation("2. Attempt to crack the safe")
+    printtextanimation("3. Look out the window for escape routes")
+    
+    choice = input("Enter your choice (1/2/3): ")
+    if choice == "1":
+        printtextanimation("You trigger an alarm while using the computer. Guards rush in. Game Over.")
+        game_over()
+    elif choice == "2":
+        printtextanimation("You find a map of the prison in the safe, aiding your escape!")
+        freedom()
+    elif choice == "3":
+        printtextanimation("You spot a potential escape route and make your move!")
+        freedom()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        warden_office()
+
+def gym_room():
+    printtextanimation("\nYou enter the prison gym, filled with equipment and a few inmates.")
+    time.sleep(1)
+    printtextanimation("You notice a vent that could lead to freedom.")
+    printtextanimation("\nWhat do you do?")
+    printtextanimation("1. Climb into the vent")
+    printtextanimation("2. Challenge an inmate to a fight")
+    printtextanimation("3. Look for another exit")
+    
+    choice = input("Enter your choice (1/2/3): ")
+    if choice == "1":
+        printtextanimation("The vent leads to the outside. You're free!")
+        freedom()
+    elif choice == "2":
+        printtextanimation("The fight attracts guards. You're caught. Game Over.")
+        game_over()
+    elif choice == "3":
+        printtextanimation("You find a hidden door leading outside!")
+        freedom()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        gym_room()
+
+def chapel_room():
+    printtextanimation("\nYou find yourself in the prison chapel, a quiet and serene place.")
+    time.sleep(1)
+    printtextanimation("You notice a trapdoor under the altar.")
+    printtextanimation("\nWhat do you do?")
+    printtextanimation("1. Open the trapdoor")
+    printtextanimation("2. Pray for guidance")
+    printtextanimation("3. Search for another exit")
+    
+    choice = input("Enter your choice (1/2/3): ")
+    if choice == "1":
+        printtextanimation("The trapdoor leads to a tunnel. You're free!")
+        freedom()
+    elif choice == "2":
+        printtextanimation("You feel a sense of peace, but no escape. Game Over.")
+        game_over()
+    elif choice == "3":
+        printtextanimation("You find a hidden passage leading outside!")
+        freedom()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        chapel_room()
+
+# Start the game
 title()
-
 start()
-
-
-
