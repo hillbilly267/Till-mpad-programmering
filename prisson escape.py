@@ -2,9 +2,12 @@ import time
 import os
 import random
 
+# a simple implementation for clearing the terminal
 def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
+#a simple implementation for writing a test character by character
 def printtextanimation(text, animation_speed=0.03):
     for char in text:
         print(char, end='', flush=True)
