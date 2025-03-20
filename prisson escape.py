@@ -105,14 +105,46 @@ def credits():
     cls()
     home_screen()
 
+
+sav1 = ""
+sav2 = ""
+sav3 = ""
+
+def save_screen():
+    global save1, save2, save3
+
+    print("save 1", sav1)
+    print("save 2", sav2)
+    print("save 3", sav3)
+    a = input("\nchoos a save file. 1-3")
+    if a == "1":
+        save = save1
+        save_file(guard_room())
+    elif a == "2":
+        save = save2
+    elif a == "3":
+        save = save3
+    return save
+
+
+
+def save_file(room):
+    global save
+    try:
+        with open(save, "x") as f:
+            f.write(room)
+            print("Game saved!")
+    except Exception as e:
+        print(f"Error saving game: {e}")
+
 def title():
     printtextanimation("""  
   _____      _                       ____                 _        
  |  __ \    (_)                     |  _ \               | |       
- | |__) | __ _ ___ ___  ___  _ __   | |_) |_ __ ___  __ _| | _____ 
- |  ___/ '__| / __/ __|/ _ \| '_ \  |  _ <| '__/ _ \/ _` | |/ / _ |
- | |   | |  | \__ \__ \ (_) | | | | | |_) | | |  __/ (_| |   <  __/
- |_|   |_|  |_|___/___/\___/|_| |_| |____/|_|  \___|\__,_|_|\_\___|
+ | |__) | __ _ ___ ___  ___  _ __   | |_) |_ __ ___  __ _| | __
+ |  ___/ '__| / __/ __|/ _ \| '_ \  |  _ <| '__/ _ \/ _` | |/ /
+ | |   | |  | \__ \__ \ (_) | | | | | |_) | | |  __/ (_| |   <
+ |_|   |_|  |_|___/___/\___/|_| |_| |____/|_|  \___|\__,_|_|\_|
                                                                    """, animation_speed=0.0001)
     
 def home_screen():
@@ -120,10 +152,10 @@ def home_screen():
     print("""
   _____      _                       ____                 _        
  |  __ \    (_)                     |  _ \               | |       
- | |__) | __ _ ___ ___  ___  _ __   | |_) |_ __ ___  __ _| | _____ 
- |  ___/ '__| / __/ __|/ _ \| '_ \  |  _ <| '__/ _ \/ _` | |/ / _ |
- | |   | |  | \__ \__ \ (_) | | | | | |_) | | |  __/ (_| |   <  __/
- |_|   |_|  |_|___/___/\___/|_| |_| |____/|_|  \___|\__,_|_|\_\___|
+ | |__) | __ _ ___ ___  ___  _ __   | |_) |_ __ ___  __ _| | __
+ |  ___/ '__| / __/ __|/ _ \| '_ \  |  _ <| '__/ _ \/ _` | |/ /
+ | |   | |  | \__ \__ \ (_) | | | | | |_) | | |  __/ (_| |   <
+ |_|   |_|  |_|___/___/\___/|_| |_| |____/|_|  \___|\__,_|_|\_|
                                                                    
  play (1)    start at a specific point (2)     credits (3)
 
@@ -131,7 +163,7 @@ def home_screen():
     a = input("")
     if a == "1":
         cls()
-        start()
+        save_screen()
     elif a == "2":
         cls()
         start_at_point()
