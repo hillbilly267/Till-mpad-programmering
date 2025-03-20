@@ -8,11 +8,102 @@ def cls():
 
 
 #a simple implementation for writing a test character by character
-def printtextanimation(text, animation_speed=0.03):
+def printtextanimation(text, animation_speed=0.01):
     for char in text:
         print(char, end='', flush=True)
         time.sleep(animation_speed)
     print()
+
+def start_at_point():
+    printtextanimation("Choose a room to enter:")
+    printtextanimation("1. First Cell")
+    printtextanimation("2. Kitchen")
+    printtextanimation("3. Ventilation System")
+    printtextanimation("4. Guard Room")
+    printtextanimation("5. Quiet Escape")
+    printtextanimation("6. Kitchen Room")
+    printtextanimation("7. Yard Escape")
+    printtextanimation("8. Roof Escape")
+    printtextanimation("9. Guard Disguise")
+    printtextanimation("10. Infirmary Room")
+    printtextanimation("11. Library Room")
+    printtextanimation("12. Secret Passage")
+    printtextanimation("13. Infirmary Room")
+    printtextanimation("14. Workshop Room")
+    printtextanimation("15. Cafeteria Room")
+    printtextanimation("16. Laundry Room")
+    printtextanimation("17. Gym Room")
+    printtextanimation("18. Chapel Room")
+
+    choice = input("Enter your choice: ")
+    if choice == '1':
+        cls()
+        first_cell()
+    elif choice == '2':
+        cls()
+        kitchen_room()
+    elif choice == '3':
+        cls()
+        ventilation_room()
+    elif choice == '4':
+        cls()
+        guard_room()
+    elif choice == '5':
+        cls()
+        quiet_escape()
+    elif choice == '6':
+        cls()
+        kitchen_room()
+    elif choice == '7':
+        cls()
+        yard_escape()
+    elif choice == '8':
+        cls()
+        roof_escape()
+    elif choice == '9':
+        cls()
+        guard_disguise()
+    elif choice == '10':
+        cls()
+        infirmary_room()
+    elif choice == '11':
+        cls()
+        library_room()
+    elif choice == '12':
+        cls()
+        secret_passage()
+    elif choice == '13':
+        cls()
+        infirmary_room()
+    elif choice == '14':
+        cls()
+        workshop_room()
+    elif choice == '15':
+        cls()
+        cafeteria_room()
+    elif choice == '16':
+        cls()
+        laundry_room()
+    elif choice == '17':
+        cls()
+        gym_room()
+    elif choice == '18':
+        cls()
+        chapel_room()
+    else:
+        printtextanimation("Invalid choice. Try again.")
+        home_screen()
+
+def credits():
+    printtextanimation("""              
+                       Created by Sebastian Gudmundss, 2025
+                       Story written by Sebastian Gudmundsson
+                       Music composed by Sebastian Gudmundsson
+                       Artwork by Sebastian Gudmundsson
+                       Developed using Python 3.9.10 by Sebastian Gudmundsson""", animation_speed=0.001)
+    input("\npress enter to go back to home screen")
+    cls()
+    home_screen()
 
 def title():
     printtextanimation("""  
@@ -23,6 +114,35 @@ def title():
  | |   | |  | \__ \__ \ (_) | | | | | |_) | | |  __/ (_| |   <  __/
  |_|   |_|  |_|___/___/\___/|_| |_| |____/|_|  \___|\__,_|_|\_\___|
                                                                    """, animation_speed=0.0001)
+    
+def home_screen():
+    cls()
+    print("""
+  _____      _                       ____                 _        
+ |  __ \    (_)                     |  _ \               | |       
+ | |__) | __ _ ___ ___  ___  _ __   | |_) |_ __ ___  __ _| | _____ 
+ |  ___/ '__| / __/ __|/ _ \| '_ \  |  _ <| '__/ _ \/ _` | |/ / _ |
+ | |   | |  | \__ \__ \ (_) | | | | | |_) | | |  __/ (_| |   <  __/
+ |_|   |_|  |_|___/___/\___/|_| |_| |____/|_|  \___|\__,_|_|\_\___|
+                                                                   
+ play (1)    start at a specific point (2)     credits (3)
+
+    """)
+    a = input("")
+    if a == "1":
+        cls()
+        start()
+    elif a == "2":
+        cls()
+        start_at_point()
+    
+    elif a == "3":
+        cls()
+        credits()
+    else:
+        cls()
+        printtextanimation("Invalid")
+        home_screen()
 
 def start():
     time.sleep(1)
@@ -119,10 +239,9 @@ def ventilation_room():
     if choice == "1":
         kitchen_room()
     elif choice == "2":
-        printtextanimation("You end up in a dead end and have to turn back. You're caught by guards. Game Over.")
-        game_over()
+        workshop_room()
     elif choice == "3":
-        guard_room()
+        library_room()
     else:
         printtextanimation("Invalid choice. Try again.")
         ventilation_room()
@@ -141,8 +260,7 @@ def guard_room():
         printtextanimation("You manage to grab the keys, but the guard raises an alarm. You're caught. Game Over.")
         game_over()
     elif choice == "2":
-        printtextanimation("You successfully knock out the guard, but the commotion attracts attention. You're caught. Game Over.")
-        game_over()
+        guard_disguise()
     elif choice == "3":
         infirmary_room()
     else:
@@ -181,8 +299,7 @@ def kitchen_room():
     
     choice = input("Enter your choice (1/2/3): ")
     if choice == "1":
-        printtextanimation("You're discovered when a cook tries to use the pot. Game Over.")
-        game_over()
+        cafeteria_room()
     elif choice == "2":
         laundry_room()
     elif choice == "3":
@@ -191,27 +308,7 @@ def kitchen_room():
         printtextanimation("Invalid choice. Try again.")
         kitchen_room()
 
-def sick_escape():
-    printtextanimation("\nThe guard believes you're sick and opens the cell to help.")
-    time.sleep(1)
-    printtextanimation("You now have an opportunity to escape.")
-    printtextanimation("\nWhat's your next move?")
-    printtextanimation("1. Overpower the guard and take his uniform")
-    printtextanimation("2. Make a run for it down the corridor")
-    printtextanimation("3. Pretend to faint and wait for more opportunities")
-    
-    choice = input("Enter your choice (1/2/3): ")
-    if choice == "1":
-        guard_disguise()
-    elif choice == "2":
-        printtextanimation("You're quickly caught by other guards in the corridor. Game Over.")
-        game_over()
-    elif choice == "3":
-        printtextanimation("The guard calls for medical help, ruining your escape plan. Game Over.")
-        game_over()
-    else:
-        printtextanimation("Invalid choice. Try again.")
-        sick_escape()
+
 
 def yard_escape():
     printtextanimation("\nYou've made it to the prison yard under the cover of darkness.")
@@ -258,7 +355,7 @@ def roof_escape():
         roof_escape()
 
 def guard_disguise():
-    printtextanimation("\nYou're now disguised as a guard. You blend in, but you're not out yet.")
+    printtextanimation("\nYou knoced the guard out and took his clothes. Now disguised as a guard, You blend in somewhat, but you're not out yet and some may till recognize you.")
     time.sleep(1)
     printtextanimation("You need to find a way out of the prison complex.")
     printtextanimation("\nWhere do you go?")
@@ -333,7 +430,7 @@ def freedom():
 
 def game_over():
     printtextanimation("\nGame Over. Try again?")
-    choice = input("Enter 'yes' to restart or 'no' to exit: ").lower()
+    choice = input("Enter 'yes' to restart: ").lower()
     if choice == 'yes':
         cls()
         start()
@@ -388,7 +485,7 @@ def infirmary_room():
     printtextanimation("\nWhat do you do?")
     printtextanimation("1. Climb out the window")
     printtextanimation("2. Search the cabinet for useful items")
-    printtextanimation("3. Hide and wait for an opportunity")
+    printtextanimation("3. sneak out into a corridor")
     
     choice = input("Enter your choice (1/2/3): ")
     if choice == "1":
@@ -399,7 +496,7 @@ def infirmary_room():
         game_over()
     elif choice == "3":
         printtextanimation("You wait too long and are discovered. Game Over.")
-        game_over()
+        library_room()
     else:
         printtextanimation("Invalid choice. Try again.")
         infirmary_room()
@@ -411,7 +508,7 @@ def workshop_room():
     printtextanimation("\nWhat do you do?")
     printtextanimation("1. Create a makeshift weapon")
     printtextanimation("2. Build a tool to aid your escape")
-    printtextanimation("3. Look for an exit")
+    printtextanimation("3. try a door in the right corner of the room")
     
     choice = input("Enter your choice (1/2/3): ")
     if choice == "1":
@@ -421,8 +518,7 @@ def workshop_room():
         printtextanimation("You craft a tool and use it to escape!")
         freedom()
     elif choice == "3":
-        printtextanimation("You find a hidden door leading outside!")
-        freedom()
+        gym_room()
     else:
         printtextanimation("Invalid choice. Try again.")
         workshop_room()
@@ -434,7 +530,7 @@ def cafeteria_room():
     printtextanimation("\nWhat do you do?")
     printtextanimation("1. Enter the staff door")
     printtextanimation("2. Blend in with the crowd")
-    printtextanimation("3. Cause a distraction")
+    printtextanimation("3. Cause a distraction and leave thrue a door")
     
     choice = input("Enter your choice (1/2/3): ")
     if choice == "1":
@@ -444,8 +540,7 @@ def cafeteria_room():
         printtextanimation("You're recognized and caught. Game Over.")
         game_over()
     elif choice == "3":
-        printtextanimation("The distraction works, and you slip away!")
-        freedom()
+        chapel_room()
     else:
         printtextanimation("Invalid choice. Try again.")
         cafeteria_room()
@@ -472,28 +567,6 @@ def laundry_room():
         printtextanimation("Invalid choice. Try again.")
         laundry_room()
 
-def warden_office():
-    printtextanimation("\nYou've managed to sneak into the warden's office.")
-    time.sleep(1)
-    printtextanimation("You see a computer, a safe, and a window overlooking the prison yard.")
-    printtextanimation("\nWhat's your next move?")
-    printtextanimation("1. Try to access the computer")
-    printtextanimation("2. Attempt to crack the safe")
-    printtextanimation("3. Look out the window for escape routes")
-    
-    choice = input("Enter your choice (1/2/3): ")
-    if choice == "1":
-        printtextanimation("You trigger an alarm while using the computer. Guards rush in. Game Over.")
-        game_over()
-    elif choice == "2":
-        printtextanimation("You find a map of the prison in the safe, aiding your escape!")
-        freedom()
-    elif choice == "3":
-        printtextanimation("You spot a potential escape route and make your move!")
-        freedom()
-    else:
-        printtextanimation("Invalid choice. Try again.")
-        warden_office()
 
 def gym_room():
     printtextanimation("\nYou enter the prison gym, filled with equipment and a few inmates.")
@@ -543,4 +616,5 @@ def chapel_room():
 
 # Start the game
 title()
+home_screen()
 start()
