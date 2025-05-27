@@ -7,7 +7,7 @@ def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-#a simple implementation for writing a test character by character
+#a simple implementation for writing character by character
 def printtextanimation(text, animation_speed=0.01):
     for char in text:
         print(char, end='', flush=True)
@@ -105,37 +105,105 @@ def credits():
     cls()
     home_screen()
 
+# Function to save data to a specific save file
+def save_data(save_files, save_slot, data):
+    save_file = save_files.get(save_slot)  # Get the file path for the selected save slot
+    if save_file:
+        try:
+            with open(save_file, "w") as f:  # Open the file in write mode, creates if not exists
+                f.write(data)  # Write the data (e.g., current room) to the file
+            return True
+        except IOError:
+            print(f"Error: Could not save to {save_file}")
+            return False
+    return False
 
-sav1 = ""
-sav2 = ""
-sav3 = ""
+# Function to load data from a specific save file
+def load_data(save_files, save_slot):
+    save_file = save_files.get(save_slot)  # Get the file path for the selected save slot
+    if save_file:
+        try:
+            with open(save_file, "r") as f:  # Open the file in read mode
+                return f.read().strip()  # Return the contents of the file
+        except FileNotFoundError:
+            # File doesn't exist yet, this is normal for new saves
+            return None
+        except IOError:
+            print(f"Error: Could not read {save_file}")
+            return None
+    return None
 
+# Initialize the save files dictionary
+# This maps save slots (e.g., "save1") to their corresponding file paths
+global save_files
+save_files = {
+    "save1": "save1.txt",
+    "save2": "save2.txt",
+    "save3": "save3.txt"
+}
+
+# Function to display the save screen and handle save slot selection
 def save_screen():
-    global save1, save2, save3
+    print("Save Slots:")
+    for slot, file in save_files.items():
+        data = load_data(save_files, slot)  # Load the data from each save slot
+        if data:
+            print(f"{slot}: {data}")  # Display the save slot and its contents
+        else:
+            print(f"{slot}: [Empty]")  # Indicate if the save slot is empty
 
-    print("save 1", sav1)
-    print("save 2", sav2)
-    print("save 3", sav3)
-    a = input("\nchoos a save file. 1-3")
+    a = input("\nChoose a save file (1-3): ")
+
+    # Map numeric input to save file keys
+    save_slot = None
     if a == "1":
-        save = save1
-        save_file(guard_room())
+        save_slot = "save1"
     elif a == "2":
-        save = save2
+        save_slot = "save2"
     elif a == "3":
-        save = save3
-    return save
+        save_slot = "save3"
 
+    if save_slot in save_files:
+        existing_data = load_data(save_files, save_slot)  # Check if the save slot has existing data
+        if existing_data:
+            print(f"Save slot {save_slot} contains: {existing_data}")
+            action = input("Do you want to (L)oad or (D)elete this save? ").lower()
+            if action == "l":
+                cls()
+                globals()[existing_data]()  # Load the saved room by dynamically calling its function
+            elif action == "d":
+                if save_data(save_files, save_slot, ""):  # Clear the save file
+                    print("Save deleted. You can now create a new save.")
+                save_screen()  # Return to the save screen
+            else:
+                print("Invalid choice. Returning to save screen.")
+                save_screen()
+        else:
+            # For empty/new save slots, go directly to first cell
+            cls()
+            first_cell()  # Start a new game directly
+    else:
+        print("Invalid choice. Try again.")
+        save_screen()
 
+def load_screen():
+    print("Load 1")
+    print("Load 2")
+    print("Load 3")
+    a = input("\nChoose a load file (1-3): ")
 
-def save_file(room):
-    global save
-    try:
-        with open(save, "x") as f:
-            f.write(room)
-            print("Game saved!")
-    except Exception as e:
-        print(f"Error saving game: {e}")
+    if a in save_files:
+        loaded_data = load_data(save_files, a)
+        if not loaded_data:  # If the save file is empty
+            print("No data found. Creating a new save.")
+            save_data(save_files, a, "first_cell")  # Initialize with the starting room
+            loaded_data = "first_cell"
+        print("Loaded data:", loaded_data)
+        cls()
+        globals()[loaded_data]()  # Dynamically call the room function
+    else:
+        print("Invalid choice. Try again.")
+        load_screen()
 
 def title():
     printtextanimation("""  
@@ -146,8 +214,10 @@ def title():
  | |   | |  | \__ \__ \ (_) | | | | | |_) | | |  __/ (_| |   <
  |_|   |_|  |_|___/___/\___/|_| |_| |____/|_|  \___|\__,_|_|\_|
                                                                    """, animation_speed=0.0001)
+
     
 def home_screen():
+    cls()
     cls()
     print("""
   _____      _                       ____                 _        
@@ -207,7 +277,66 @@ def start():
         cls()
         start()
 
+
+def code_loc_puzzle():
+    printtextanimation("\nYou encounter a locked door with a keypad.")
+    time.sleep(1)
+    printtextanimation("The keypad requires a 4-digit code.")
+    printtextanimation("Hint: The code is the year the prison was built (1985).")
+    
+    correct_code = "1985"
+    attempts = 3
+    while attempts > 0:
+        code = input("Enter the 4-digit code: ")
+        if code == correct_code:
+            printtextanimation("The door unlocks! You proceed to the next room.")
+            return True
+        else:
+            attempts -= 1
+            printtextanimation(f"Incorrect code. You have {attempts} attempts left.")
+    
+    printtextanimation("You've run out of attempts. Guards catch you. Game Over.")
+    game_over()
+
+def timed_door_challenge():
+    printtextanimation("\nYou find a lock with a timer. You have 10 seconds to open it!")
+    time.sleep(1)
+    printtextanimation("Press 'o' repeatedly to open the door before time runs out.")
+    
+    import threading
+    import msvcrt  # For Windows keypress detection
+    
+    door_opened = False
+    def countdown():
+        nonlocal door_opened
+        for i in range(10, 0, -1):
+            if door_opened:
+                return
+            print(f"\rTime left: {i} seconds", end="")
+            time.sleep(1)
+        if not door_opened:
+            printtextanimation("\nTime's up! Guards catch you. Game Over.")
+            game_over()
+    
+    def open_door():
+        nonlocal door_opened
+        presses = 0
+        while presses < 20:
+            if msvcrt.kbhit() and msvcrt.getch().decode('utf-8').lower() == 'o':
+                presses += 1
+                print(f"\rPresses: {presses}/20", end="")
+        door_opened = True
+        printtextanimation("\nYou successfully opened the door!")
+    
+    timer_thread = threading.Thread(target=countdown)
+    door_thread = threading.Thread(target=open_door)
+    timer_thread.start()
+    door_thread.start()
+    timer_thread.join()
+    door_thread.join()
+
 def first_cell():
+    save_data(save_files, "save1", "first_cell")  # Save the current room
     printtextanimation("\nYou find yourself in a dark and dusty cell.")
     time.sleep(1)
     printtextanimation("A heavy door is locked behind you.")
@@ -237,6 +366,7 @@ def first_cell():
         first_cell()
 
 def window_room():
+    save_data(save_files, "save1", "window_room")  # Save the current room
     printtextanimation("\nYou start filing the window bars. It's a slow process, but you're making progress.")
     time.sleep(1)
     printtextanimation("After a while, you hear footsteps approaching.")
@@ -259,6 +389,7 @@ def window_room():
         window_room()
 
 def ventilation_room():
+    save_data(save_files, "save1", "ventilation_room")  # Save the current room
     printtextanimation("\nYou manage to unscrew the ventilation panel and crawl inside.")
     time.sleep(1)
     printtextanimation("You find yourself at a junction in the ventilation system.")
@@ -273,12 +404,14 @@ def ventilation_room():
     elif choice == "2":
         workshop_room()
     elif choice == "3":
+        timed_door_challenge()
         library_room()
     else:
         printtextanimation("Invalid choice. Try again.")
         ventilation_room()
 
 def guard_room():
+    save_data(save_files, "save1", "guard_room")  # Save the current room
     printtextanimation("\nYou call the guard over. As he approaches, you prepare to make your move.")
     time.sleep(1)
     printtextanimation("The guard is now right in front of your cell.")
@@ -300,6 +433,7 @@ def guard_room():
         guard_room()
 
 def quiet_escape():
+    save_data(save_files, "save1", "quiet_escape")  # Save the current room
     printtextanimation("\nThe guard passes by without noticing anything suspicious.")
     time.sleep(1)
     printtextanimation("You resume filing the window bars and eventually create an opening.")
@@ -321,6 +455,7 @@ def quiet_escape():
         quiet_escape()
 
 def kitchen_room():
+    save_data(save_files, "save1", "kitchen_room")  # Save the current room
     printtextanimation("\nYou emerge from the ventilation system into the prison kitchen.")
     time.sleep(1)
     printtextanimation("It's currently empty, but you hear voices approaching.")
@@ -340,9 +475,8 @@ def kitchen_room():
         printtextanimation("Invalid choice. Try again.")
         kitchen_room()
 
-
-
 def yard_escape():
+    save_data(save_files, "save1", "yard_escape")  # Save the current room
     printtextanimation("\nYou've made it to the prison yard under the cover of darkness.")
     time.sleep(1)
     printtextanimation("The high walls loom before you.")
@@ -365,6 +499,7 @@ def yard_escape():
         yard_escape()
 
 def roof_escape():
+    save_data(save_files, "save1", "roof_escape")  # Save the current room
     printtextanimation("\nYou've made it to the roof using your makeshift rope.")
     time.sleep(1)
     printtextanimation("You can see the outside world, but you're not free yet.")
@@ -387,6 +522,7 @@ def roof_escape():
         roof_escape()
 
 def guard_disguise():
+    save_data(save_files, "save1", "guard_disguise")  # Save the current room
     printtextanimation("\nYou knoced the guard out and took his clothes. Now disguised as a guard, You blend in somewhat, but you're not out yet and some may till recognize you.")
     time.sleep(1)
     printtextanimation("You need to find a way out of the prison complex.")
@@ -409,6 +545,7 @@ def guard_disguise():
         guard_disguise()
 
 def laundry_room():
+    save_data(save_files, "save1", "laundry_room")  # Save the current room
     printtextanimation("\nDisguised as a kitchen worker, you make your way to the laundry room.")
     time.sleep(1)
     printtextanimation("You see an opportunity to escape through the laundry chute.")
@@ -431,6 +568,7 @@ def laundry_room():
         laundry_room()
 
 def warden_office():
+    save_data(save_files, "save1", "warden_office")  # Save the current room
     printtextanimation("\nYou've managed to sneak into the warden's office.")
     time.sleep(1)
     printtextanimation("You see a computer, a safe, and a window overlooking the prison yard.")
@@ -470,6 +608,7 @@ def game_over():
         exit()
 
 def library_room():
+    save_data(save_files, "save1", "library_room")  # Save the current room
     printtextanimation("\nYou find yourself in the prison library, filled with books and a few inmates.")
     time.sleep(1)
     printtextanimation("You notice a suspicious book that seems out of place.")
@@ -492,6 +631,7 @@ def library_room():
         library_room()
 
 def secret_passage():
+    save_data(save_files, "save1", "secret_passage")  # Save the current room
     printtextanimation("\nThe bookcase slides open, revealing a secret passage.")
     time.sleep(1)
     printtextanimation("You enter the passage and find yourself in a dimly lit tunnel.")
@@ -511,7 +651,8 @@ def secret_passage():
         secret_passage()
 
 def infirmary_room():
-    printtextanimation("\nYou sneak into the infirmary, hoping to find a way out.")
+    save_data(save_files, "save1", "infirmary_room")  # Save the current room
+    printtextanimation("\nYou trick the guard and sneak into the infirmary. the guard leave you in the room alone while getting the nurse. You search around, hoping to find a way out.")
     time.sleep(1)
     printtextanimation("You see a window slightly ajar and a medicine cabinet.")
     printtextanimation("\nWhat do you do?")
@@ -534,6 +675,7 @@ def infirmary_room():
         infirmary_room()
 
 def workshop_room():
+    save_data(save_files, "save1", "workshop_room")  # Save the current room
     printtextanimation("\nYou enter the workshop, filled with tools and materials.")
     time.sleep(1)
     printtextanimation("You could potentially craft something useful.")
@@ -556,6 +698,7 @@ def workshop_room():
         workshop_room()
 
 def cafeteria_room():
+    save_data(save_files, "save1", "cafeteria_room")  # Save the current room
     printtextanimation("\nYou find yourself in the cafeteria, bustling with activity.")
     time.sleep(1)
     printtextanimation("You notice a door marked 'Staff Only'.")
@@ -578,6 +721,7 @@ def cafeteria_room():
         cafeteria_room()
 
 def laundry_room():
+    save_data(save_files, "save1", "laundry_room")  # Save the current room
     printtextanimation("\nDisguised as a kitchen worker, you make your way to the laundry room.")
     time.sleep(1)
     printtextanimation("You see an opportunity to escape through the laundry chute.")
@@ -599,8 +743,8 @@ def laundry_room():
         printtextanimation("Invalid choice. Try again.")
         laundry_room()
 
-
 def gym_room():
+    save_data(save_files, "save1", "gym_room")  # Save the current room
     printtextanimation("\nYou enter the prison gym, filled with equipment and a few inmates.")
     time.sleep(1)
     printtextanimation("You notice a vent that could lead to freedom.")
@@ -624,6 +768,7 @@ def gym_room():
         gym_room()
 
 def chapel_room():
+    save_data(save_files, "save1", "chapel_room")  # Save the current room
     printtextanimation("\nYou find yourself in the prison chapel, a quiet and serene place.")
     time.sleep(1)
     printtextanimation("You notice a trapdoor under the altar.")
@@ -648,5 +793,7 @@ def chapel_room():
 
 # Start the game
 title()
+
 home_screen()
 start()
+
